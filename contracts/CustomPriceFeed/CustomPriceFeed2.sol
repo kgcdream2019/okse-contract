@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: UNLICENSED
+//SPDX-License-Identifier: LICENSED
 
 pragma solidity ^0.7.0;
 import "../interfaces/AggregatorV3Interface.sol";
@@ -6,7 +6,7 @@ import "../Swapper/uniswapv2/interfaces/IUniswapV2Router01.sol";
 import "../interfaces/ERC20Interface.sol";
 
 contract CustomPriceFeed2 is AggregatorV3Interface {
-  address public immutable USDT;
+  address public immutable USDC;
   address public immutable WETH;
   address public immutable router;
   address public immutable token;
@@ -38,7 +38,7 @@ contract CustomPriceFeed2 is AggregatorV3Interface {
     address _router
   ) {
     token = _token;
-    USDT = _usdt;
+    USDC = _usdt;
     WETH = _weth;
     router = _router;
     testAmountsIn = 1 ether;
@@ -114,7 +114,7 @@ contract CustomPriceFeed2 is AggregatorV3Interface {
     address[] memory path = new address[](3);
     path[0] = token;
     path[1] = WETH;
-    path[2] = USDT;
+    path[2] = USDC;
     uint256 amountIn = testAmountsIn;
     uint256[] memory amounts = IUniswapV2Router01(router).getAmountsOut(
       amountIn,
@@ -122,7 +122,7 @@ contract CustomPriceFeed2 is AggregatorV3Interface {
     );
     int256 _dec = _decimals +
       ERC20Interface(token).decimals() -
-      ERC20Interface(USDT).decimals();
+      ERC20Interface(USDC).decimals();
     int256 price;
     if (_dec >= 0) {
       price = int256((amounts[2] * uint256(10**uint256(_dec))) / testAmountsIn);
