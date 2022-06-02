@@ -10,7 +10,8 @@
     "test": "hardhat test",
     "deploy": "hardhat deploy",
     "console": "hardhat console",
-    "verify": "hardhat verify"
+    "verify": "hardhat verify",
+    "start": "hardhat run"
     
   },
   "repository": {
