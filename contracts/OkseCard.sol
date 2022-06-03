@@ -179,7 +179,6 @@ contract OkseCard is OwnerConstants, SignerRole {
         monthlyFeeAmount = 6.99 ether;
         okseMonthlyProfit = 1000;
         initialized = true;
-        // timeDiff = 4 hours;
     }
 
     /// modifier functions
