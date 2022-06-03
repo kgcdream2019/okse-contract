@@ -7,8 +7,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     contractAddress: string,
     _owners: string[]
   ) {
-    let contract = await ethers.getContractAt(contractName, contractAddress);
-    await contract.initializeOwners(_owners);
+    try {
+      let contract = await ethers.getContractAt(contractName, contractAddress);
+      const txPure = await contract.initializeOwners(_owners);
+      const sendTx = await txPure.wait();
+      console.log(`contractName initializeOwners txHash = ${sendTx.transactionHash}`);
+    } catch (e) {
+      console.log(e.message);
+    }
   }
   const { deploy } = deployments;
   // console.log(network);
@@ -58,11 +64,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       log: true,
     });
   }
+  const Converter_Implementation = await deploy("Converter", {
+    from: deployer,
+    args: [],
+    log: true,
+  });
 
   const signer = "0x5126EA3894671E1c6cce47D3fB462E3C270e499e";
-
-  /////////bsc network//////////////////////////////////////////////////////////////////////////
-  // address _WETH, address _USDT, address _okseAddress, address _priceOracle, address _factory
 
   // // const oksecard = await deploy('OkseCard', {
   // //     from: deployer,
@@ -87,7 +95,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   const OkseCard_Implementation = await deploy("OkseCard", {
     from: deployer,
-    args: [signer],
+    args: [Converter_Implementation.address, signer],
     log: true,
   });
   initializeOwners("OkseCard", OkseCard_Implementation.address, _owners);
@@ -117,7 +125,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // MarketManager
   const MarketManager_Implementation = await deploy("MarketManager", {
     from: deployer,
-    args: [okseCardAddress, _WETH, USDT, okse],
+    args: [
+      okseCardAddress,
+      _WETH,
+      USDT,
+      okse,
+      Converter_Implementation.address,
+    ],
     log: true,
   });
   initializeOwners(
