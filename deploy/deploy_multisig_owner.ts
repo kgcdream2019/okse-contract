@@ -16,10 +16,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "0x0Ed78A9DE439d4aA69596402A0947819655d3c05",
   ];
   let multisigOwnerContract = await ethers.getContractAt("MultiSigOwner", multisigOwner.address);
-  // let multisigOwnerContract = await ethers.getContractAt(
-  //   "MultiSigOwner",
-  //   "0x5a71a59B6d76af9b5c1a1fFB3230126aD6b6fC65"
-  // );
   await multisigOwnerContract.initializeOwners(_owners);
 };
 export default func;

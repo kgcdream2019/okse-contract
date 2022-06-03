@@ -11,7 +11,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       let contract = await ethers.getContractAt(contractName, contractAddress);
       const txPure = await contract.initializeOwners(_owners);
       const sendTx = await txPure.wait();
-      console.log(`contractName initializeOwners txHash = ${sendTx.transactionHash}`);
+      console.log(
+        `${contractName} initializeOwners txHash = ${sendTx.transactionHash}`
+      );
     } catch (e) {
       console.log(e.message);
     }
@@ -98,7 +100,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [Converter_Implementation.address, signer],
     log: true,
   });
-  initializeOwners("OkseCard", OkseCard_Implementation.address, _owners);
+  await initializeOwners("OkseCard", OkseCard_Implementation.address, _owners);
   const okseCardAddress = OkseCard_Implementation.address;
   // LevelManager
   const LevelManager_Implementation = await deploy("LevelManager", {
@@ -106,7 +108,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [okseCardAddress],
     log: true,
   });
-  initializeOwners(
+  await initializeOwners(
     "LevelManager",
     LevelManager_Implementation.address,
     _owners
@@ -117,7 +119,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [okseCardAddress, LevelManager_Implementation.address],
     log: true,
   });
-  initializeOwners(
+  await initializeOwners(
     "LimitManager",
     LimitManager_Implementation.address,
     _owners
@@ -134,7 +136,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     ],
     log: true,
   });
-  initializeOwners(
+  await initializeOwners(
     "MarketManager",
     MarketManager_Implementation.address,
     _owners
@@ -145,7 +147,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     args: [okseCardAddress],
     log: true,
   });
-  initializeOwners(
+  await initializeOwners(
     "CashBackManager",
     CashBackManager_Implementation.address,
     _owners
@@ -162,21 +164,26 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const governorAddress = "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b";
   const monthlyfeeAddress = "0x68249d7F891EA6E3142DF4801891Dd10e2E22FFe";
   const stakeContractAddress = "0x68249d7F891EA6E3142DF4801891Dd10e2E22FFe";
-
-  await okseCardContract.initialize(
-    oksecardPriceOracle.address,
-    LimitManager_Implementation.address,
-    LevelManager_Implementation.address,
-    MarketManager_Implementation.address,
-    CashBackManager_Implementation.address,
-    financialAddress,
-    masterAddress,
-    treasuryAddress,
-    governorAddress,
-    monthlyfeeAddress,
-    stakeContractAddress,
-    swapper.address
-  );
+  try {
+    const txPure = await okseCardContract.initialize(
+      oksecardPriceOracle.address,
+      LimitManager_Implementation.address,
+      LevelManager_Implementation.address,
+      MarketManager_Implementation.address,
+      CashBackManager_Implementation.address,
+      financialAddress,
+      masterAddress,
+      treasuryAddress,
+      governorAddress,
+      monthlyfeeAddress,
+      stakeContractAddress,
+      swapper.address
+    );
+    const sendTx = await txPure.wait();
+    console.log("OkseCard init txHash = ", sendTx.transactionHash);
+  } catch (e) {
+    console.log(e.message);
+  }
   // const OkseCard_Proxy = await deploy('TransparentUpgradeableProxy',{
   //   from: deployer,
   //   args: [OkseCard_Implementation.address, DefaultProxyAdmin.address,'0x'],
