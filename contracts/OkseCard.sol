@@ -116,7 +116,14 @@ contract OkseCard is OwnerConstants, SignerRole {
         address market,
         address beforeMarket
     );
-    event PriceOracleAndSwapperChanged(address priceOracle, address swapper);
+    event ContractAddressChanged(
+        address priceOracle,
+        address swapper,
+        address limitManager,
+        address levelManager,
+        address marketManager,
+        address cashbackManager
+    );
     event WithdrawTokens(address token, address to, uint256 amount);
 
     // verified
@@ -331,6 +338,7 @@ contract OkseCard is OwnerConstants, SignerRole {
         );
     }
 
+    // newly verified
     function setUserMainMarket(
         uint256 id,
         address market,
@@ -401,22 +409,23 @@ contract OkseCard is OwnerConstants, SignerRole {
         );
         signatureId[id] = true;
         // increase valid period
+
         // extend user's valid time
         uint256 _monthlyFee = getMonthlyFeeAmount(
             market == IMarketManager(marketManager).OKSE()
         );
-
+        uint256 _tempVal = _monthlyFee;
         userValidTimes[userAddr] = block.timestamp + CARD_VALIDATION_TIME;
 
         if (stakeContractAddress != address(0)) {
-            _monthlyFee = (_monthlyFee * 10000) / (10000 + stakePercent);
+            _tempVal = (_monthlyFee * 10000) / (10000 + stakePercent);
         }
 
         uint256 beforeAmount = usersBalances[userAddr][market];
         calculateAmount(
             market,
             userAddr,
-            _monthlyFee,
+            _tempVal,
             monthlyFeeAddress,
             stakeContractAddress,
             stakePercent
@@ -435,7 +444,7 @@ contract OkseCard is OwnerConstants, SignerRole {
         );
     }
 
-    // verified
+    // newly verified
     function withdraw(
         uint256 id,
         address market,
@@ -520,6 +529,7 @@ contract OkseCard is OwnerConstants, SignerRole {
     }
 
     // decimal of usdAmount is 18
+    // newly verified
     function buyGoods(SignData calldata _data, SignKeys[2] calldata signer_key)
         external
         nonReentrant
@@ -542,7 +552,6 @@ contract OkseCard is OwnerConstants, SignerRole {
             "pru"
         );
         signatureId[_data.id] = true;
-        require(signer_key[0].s != signer_key[1].s, "");
         if (_data.market == IMarketManager(marketManager).OKSE()) {
             require(IMarketManager(marketManager).oksePaymentEnable(), "jsy");
         }
@@ -755,21 +764,39 @@ contract OkseCard is OwnerConstants, SignerRole {
     }
 
     // verified
-    function setPriceOracleAndSwapper(
+    function setContractAddress(
         bytes calldata signData,
         bytes calldata keys
-    ) public validSignOfOwner(signData, keys, "setPriceOracleAndSwapper") {
+    ) public validSignOfOwner(signData, keys, "setContractAddress") {
         (, , , bytes memory params) = abi.decode(
             signData,
             (bytes4, uint256, uint256, bytes)
         );
-        (address _priceOracle, address _swapper) = abi.decode(
-            params,
-            (address, address)
-        );
+        (
+            address _priceOracle,
+            address _swapper,
+            address _limitManager,
+            address _levelManager,
+            address _marketManager,
+            address _cashbackManager
+        ) = abi.decode(
+                params,
+                (address, address, address, address, address, address)
+            );
         priceOracle = _priceOracle;
         swapper = _swapper;
-        emit PriceOracleAndSwapperChanged(priceOracle, swapper);
+        limitManager = _limitManager;
+        levelManager = _levelManager;
+        marketManager = _marketManager;
+        cashbackManager = _cashbackManager;
+        emit ContractAddressChanged(
+            priceOracle,
+            swapper,
+            limitManager,
+            levelManager,
+            marketManager,
+            cashbackManager
+        );
     }
 
     // owner function

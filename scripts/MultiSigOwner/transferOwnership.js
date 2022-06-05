@@ -1,5 +1,5 @@
 const { network, ethers } = require("hardhat");
-const { getSignData, getSignKeys } = require("./signature");
+const { getSignData, getSignKeys } = require("../signature");
 // yours, or create new ones.
 async function main() {
     const [deployer] = await ethers.getSigners();

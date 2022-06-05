@@ -48,7 +48,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     _WETH = "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83"; // WMATIC
     USDT = "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75"; // USDC
     okse = "0xEFF6FcfBc2383857Dd66ddf57effFC00d58b7d9D"; // OKSE
-    factory = "0xc35DADB65012eC5796536bD9864eD8773aBc74C4"; // sushiswap factory
+    factory = "0x152eE697f2E276fA89E96742e9bB9aB1F2E61bE3"; // spookyswap factory
     swapper = await deploy("SpookySwapper", {
       from: deployer,
       args: [factory],

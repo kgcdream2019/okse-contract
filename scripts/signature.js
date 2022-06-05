@@ -136,7 +136,7 @@ const getSignData = (functionName, id, typeArray, dataArray) => {
     let params = ethers.utils.defaultAbiCoder.encode(typeArray, dataArray);
     let funcSig = getId(functionName);
     var current = new Date();
-    let signValidTime = current.getTime() / 1000 + 86400;
+    let signValidTime = Math.floor(current.getTime() / 1000 + 86400);
     let signData = ethers.utils.defaultAbiCoder.encode(["bytes4", "uint256", "uint256", "bytes"], [funcSig, id, signValidTime, params])
     return signData
 }
