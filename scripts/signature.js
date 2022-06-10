@@ -128,6 +128,7 @@ const performContractSign = async (privateKey, contractAddress, method, apiId, u
 // MultiSig Owner
 function getId(str) {
     return `0x${ethUtil.keccak256(str).toString("hex").substring(0, 8)}`;
+    // return `0x${ethUtil.keccakFromString(str).toString("hex").substring(0, 8)}`;
 }
 
 const getSignData = (functionName, id, typeArray, dataArray) => {
@@ -135,6 +136,7 @@ const getSignData = (functionName, id, typeArray, dataArray) => {
     // dataArray: [contractAddress, method, apiId, userAddress, marketAddress, amount, validTime]
     let params = ethers.utils.defaultAbiCoder.encode(typeArray, dataArray);
     let funcSig = getId(functionName);
+    console.log(funcSig)
     var current = new Date();
     let signValidTime = Math.floor(current.getTime() / 1000 + 86400);
     let signData = ethers.utils.defaultAbiCoder.encode(["bytes4", "uint256", "uint256", "bytes"], [funcSig, id, signValidTime, params])
@@ -145,10 +147,9 @@ const getSignKeys = async (privateKey, contractAddress, chainId, signData) => {
         try {
             const typeArray = ["address", "uint256", "bytes"]
             const dataArray = [contractAddress, chainId, signData]
-
-            const backendSigner = new ethers.Wallet(privateKey);
             const signMessage = getEncodedContractKeccak(typeArray, dataArray);
-
+            
+            const backendSigner = new ethers.Wallet(privateKey);
             const signSignature = await backendSigner.signMessage(signMessage)
 
             const signerAddress = getContractSignerAddress(typeArray, dataArray, signSignature)
