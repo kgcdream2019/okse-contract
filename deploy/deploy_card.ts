@@ -26,6 +26,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b",
     "0x0Ed78A9DE439d4aA69596402A0947819655d3c05",
   ];
+  let _ownersForPriceOracle = [
+    "0xF92d6d2c833434EF1Cc9284f9890A17d42497CCB",
+    "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b",
+    "0x0Ed78A9DE439d4aA69596402A0947819655d3c05",
+  ];
   const oksecardPriceOracle = await deploy("OkseCardPriceOracle", {
     from: deployer,
     args: [],
@@ -34,7 +39,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   await initializeOwners(
     "OkseCardPriceOracle",
     oksecardPriceOracle.address,
-    _owners
+    _ownersForPriceOracle
   );
 
   // address _WETH, address _USDT, address _okseAddress, address _priceOracle, address _factory
@@ -58,7 +63,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (network.name === "bscmainnet") {
     _WETH = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"; // WBNB
     USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // BUSD
-    okse = "0x5A41F637C3f7553dBa6dDC2D3cA92641096577ea"; // OKSE / SPIRIT
+    okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE / SPIRIT
     factory = "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"; // pancakeswap factory
     swapper = await deploy("PancakeSwapper", {
       from: deployer,
@@ -158,12 +163,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "OkseCard",
     okseCardAddress
   );
-  const financialAddress = "0x8D6963fbc2a203a91f7011718e27e11c2E87D634";
-  const masterAddress = "0x68249d7F891EA6E3142DF4801891Dd10e2E22FFe";
-  const treasuryAddress = "0x23BaDd10261c02aA6CB1a90114daE41265B4F221";
-  const governorAddress = "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b";
-  const monthlyfeeAddress = "0x68249d7F891EA6E3142DF4801891Dd10e2E22FFe";
-  const stakeContractAddress = "0x68249d7F891EA6E3142DF4801891Dd10e2E22FFe";
+  const financialAddress = "0x700B4A3F6bf15D7E31a87fBFB1A4bBba9Bf8EB87";
+  const masterAddress = "0xCe75aaeEfef7b14cE7156d800B291b195559d07c";
+  const treasuryAddress = "0xf57F68e6bc75979feB128C1A2061EeD60695f190";
+  const governorAddress = "0xCBd4e556fC24C83159DEfD1D1BBAd66Fd7d2C75c";
+  const monthlyfeeAddress = "0x7D2D43B0FB877a08ecBb8f95E01E9a70321C4c84";
+  const stakeContractAddress = "0xf57F68e6bc75979feB128C1A2061EeD60695f190";
   try {
     const txPure = await okseCardContract.initialize(
       oksecardPriceOracle.address,
