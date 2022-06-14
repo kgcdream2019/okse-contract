@@ -12,7 +12,7 @@ contract PancakeSwapper {
   address public factory;
   address public constant WBNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
   address public constant BUSD = 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56;
-  address public constant OKSE = 0x5A41F637C3f7553dBa6dDC2D3cA92641096577ea;
+  address public constant OKSE = 0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875;
 
   constructor(address _factory) {
     factory = _factory;
