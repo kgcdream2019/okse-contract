@@ -10,7 +10,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (network.name === "fantom") {
     // address _WETH, address _USDT, address _okseAddress, address _priceOracle, address _factory
     const USDT = "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75"; // USDC
-    const okse = "0xEFF6FcfBc2383857Dd66ddf57effFC00d58b7d9D"; // OKSE
+    const okse = "0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88"; // OKSE
     const spookyRouter = "0xF491e7B69E4244ad4002BC14e878a34207E38c29"; // spookyswap router
     const BOO = "0x841fad6eae12c286d1fd18d1d525dffa75c7effe";
     const MAI = "0xfb98b335551a418cd0737375a2ea0ded62ea213b";

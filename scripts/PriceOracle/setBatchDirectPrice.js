@@ -5,7 +5,7 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     const contractAddress = "0x5E79A2474281AE517689790eE8457741726c793e";
     const multiSigContract = await ethers.getContractAt("OkseCardPriceOracle", contractAddress);
-    const _assets = ["0xEFF6FcfBc2383857Dd66ddf57effFC00d58b7d9D"];
+    const _assets = ["0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88"];
     const _prices = ["325800"];
     let signData = getSignData("setBatchDirectPrice", 15, ["address[]", "uint256[]"], [_assets, _prices])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, 250, signData);

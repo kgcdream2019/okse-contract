@@ -13,7 +13,7 @@ contract SpookySwapper {
   address public constant TOMB = 0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7;
   address public constant WFTM = 0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83;
   address public constant USDC = 0x04068DA6C83AFCFA0e13ba15A6696662335D5B75;
-  address public constant OKSE = 0xEFF6FcfBc2383857Dd66ddf57effFC00d58b7d9D;
+  address public constant OKSE = 0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88;
   address public constant BOO = 0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE;
   address public constant TOR = 0x74E23dF9110Aa9eA0b6ff2fAEE01e740CA1c642e;
 

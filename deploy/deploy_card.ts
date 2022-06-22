@@ -26,6 +26,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b",
     "0x0Ed78A9DE439d4aA69596402A0947819655d3c05",
   ];
+  // owners from tobias
+  // let _owners = [
+  //   "0xF92d6d2c833434EF1Cc9284f9890A17d42497CCB",
+  //   "0xC533335b07e4E6B79763AAa65D45AF2c0606a016",
+  //   "0x3Cdf6195e83a61e9D1842c70707e7B2fe10D2793",
+  // ];
   let _ownersForPriceOracle = [
     "0xF92d6d2c833434EF1Cc9284f9890A17d42497CCB",
     "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b",
@@ -51,8 +57,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   let swapper: any;
   if (network.name === "fantom") {
     _WETH = "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83"; // WMATIC
-    USDT = "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75"; // USDC
-    okse = "0xEFF6FcfBc2383857Dd66ddf57effFC00d58b7d9D"; // OKSE
+    USDT = "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75";  // USDC
+    okse = "0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88";  // OKSE
     factory = "0x152eE697f2E276fA89E96742e9bB9aB1F2E61bE3"; // spookyswap factory
     swapper = await deploy("SpookySwapper", {
       from: deployer,
@@ -62,8 +68,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   if (network.name === "bscmainnet") {
     _WETH = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"; // WBNB
-    USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // BUSD
-    okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE / SPIRIT
+    USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56";  // BUSD
+    okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875";  // OKSE / SPIRIT
     factory = "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"; // pancakeswap factory
     swapper = await deploy("PancakeSwapper", {
       from: deployer,
