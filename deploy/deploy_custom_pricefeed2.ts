@@ -16,11 +16,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const MAI = "0xfb98b335551a418cd0737375a2ea0ded62ea213b";
     const WETH = "0x21be370d5312f44cb42ce377bc9b8a0cef1a4c83";
     const TOR = "0x74E23dF9110Aa9eA0b6ff2fAEE01e740CA1c642e";
-    // const OksePriceFeed_Implementation = await deploy('CustomPriceFeed2', {
-    //   from: deployer,
-    //   args: [okse, USDT, WETH, spookyRouter],
-    //   log: true,
-    // })
+    const OksePriceFeed_Implementation = await deploy("CustomPriceFeed2", {
+      from: deployer,
+      args: [okse, USDT, WETH, spookyRouter],
+      log: true,
+    });
     // const BooPriceFeed_Implementation = await deploy('CustomPriceFeed2', {
     //   from: deployer,
     //   args: [BOO, USDT, WETH, spookyRouter],
@@ -38,13 +38,22 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     //   log: true,
     // })
 
-    const TORPriceFeed_Implementation = await deploy("CustomPriceFeed2", {
-      from: deployer,
-      args: [TOR, USDT, WETH, spookyRouter],
-      log: true,
-    });
+    // const TORPriceFeed_Implementation = await deploy("CustomPriceFeed2", {
+    //   from: deployer,
+    //   args: [TOR, USDT, WETH, spookyRouter],
+    //   log: true,
+    // });
   }
   if (network.name === "bscmainnet") {
+    const USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // BUSD
+    const okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE
+    const pancakeRouter = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // pancakeswap router
+    const WETH = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+    const OksePriceFeed_Implementation = await deploy("CustomPriceFeed2", {
+      from: deployer,
+      args: [okse, USDT, WETH, pancakeRouter],
+      log: true,
+    });
   }
 };
 export default func;

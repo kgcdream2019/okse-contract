@@ -4,7 +4,6 @@
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
 import "./pancakeswap/interfaces/IUniswapV2Pair.sol";
-import "./pancakeswap/interfaces/IUniswapV2Factory.sol";
 import "./pancakeswap/libraries/UniswapV2Library.sol";
 
 contract PancakeSwapper {
