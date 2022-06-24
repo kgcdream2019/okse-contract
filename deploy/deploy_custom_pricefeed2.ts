@@ -55,6 +55,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       log: true,
     });
   }
+  if (network.name === "avaxc") {
+    const USDT = "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"; // USDC
+    const okse = "0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87"; // OKSE
+    const router = "0x60ae616a2155ee3d9a68541ba4544862310933d4"; // JoeRouter2 router
+    const WETH = "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7";
+    const OksePriceFeed_Implementation = await deploy("CustomPriceFeed2", {
+      from: deployer,
+      args: [okse, USDT, WETH, router],
+      log: true,
+    });
+  }
 };
 export default func;
 func.tags = ["CustomPriceFeed2"];

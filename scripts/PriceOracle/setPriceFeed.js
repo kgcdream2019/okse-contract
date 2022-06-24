@@ -10,7 +10,9 @@ async function main() {
     else if (network.name === "fantom") {
         contractAddress = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875";
     }
-
+    else if (network.name === "avaxc") {
+        contractAddress = "0x4141c9420DF74d2379c1D3CD983a8c306Aa1A6b4";
+    }
     const multiSigContract = await ethers.getContractAt("OkseCardPriceOracle", contractAddress);
     let asset;
     let priceFeed;
@@ -40,8 +42,20 @@ async function main() {
         asset = "0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88"; // OKSE
         priceFeed = "0xf8dFF85007bbA10B01cDB2e8F58E84654383EE48"; // OKSE Feed
     }
+    else if (network.name === "avaxc") {
+        chainId = 43114;
 
-    let signData = getSignData("setPriceFeed", 6, ["address", "address"], [asset, priceFeed])
+        asset = "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"; // USDC
+        priceFeed = "0xF096872672F44d6EBA71458D74fe67F9a77a23B9"; // USDC Feed
+        
+        asset = "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"; // AVAX
+        priceFeed = "0xF096872672F44d6EBA71458D74fe67F9a77a23B9"; // AVAX Feed
+
+        // asset = "0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87"; // OKSE
+        // priceFeed = "0xC146794e568D1B4087F2D79Bf5e3fBF18Fe5Ff76"; // OKSE Feed
+    }
+
+    let signData = getSignData("setPriceFeed", 5, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     await multiSigContract.setPriceFeed(signData, keys);

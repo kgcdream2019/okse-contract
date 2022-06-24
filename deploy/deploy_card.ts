@@ -80,7 +80,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (network.name === "avaxc") {
     _WETH = "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"; // WAVAX
     USDT = "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E";  // USDC
-    okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875";  // OKSE / SPIRIT
+    okse = "0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87";  // OKSE / SPIRIT
     factory = "0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10"; // traderjoe factory
     swapper = await deploy("TraderJoeSwapper", {
       from: deployer,
