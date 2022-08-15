@@ -28,7 +28,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   ];
   // owners from tobias
   // let _owners = [
-  //   "0xF92d6d2c833434EF1Cc9284f9890A17d42497CCB",
+  //   "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b",
   //   "0xC533335b07e4E6B79763AAa65D45AF2c0606a016",
   //   "0x3Cdf6195e83a61e9D1842c70707e7B2fe10D2793",
   // ];

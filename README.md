@@ -16,6 +16,14 @@
 
     yarn verify --network fantom <contract address> [<constructor param>, <>,...]
 
+## debug contract
+
+    yarn console --network fantom
+    > let j = await ethers.getContractAt("TWAPPriceFeed", "0xD7e58aCfEA8cd55AA4A19770b9a866f34a085848");
+    > let r = await j.latestRoundData();
+    > r = await j.setTwapEnable(true);
+
+
 ## Deployed contracts address and size
 
     ·-------------------------------|-------------|---------------·····························|
@@ -95,3 +103,26 @@
         
     - bscmainnet
 
+Daily limits
+
+
+● Stake 0 Okse - Limit $250 per Day
+● Stake 5,000 Okse - Limit $500 per Day
+● Stake 25,000 Okse - Limit $2,500 per Day
+● Stake 50,000 Okse - Limit $5,000 per Day
+● Stake 100,000 Okse - Limit $10,000 per Day
+● Stake 250,000 Okse - Limit $50,000 per Day
+
+## TWAP Price Oracle Feeds
+
+    -fantom
+        
+    TWAPPriceFeed   MAI 0xfb98b335551a418cd0737375a2ea0ded62ea213b  0xE91DE865117EFAFfCC4dAD5673B0b12f6168511c
+    TWAPPriceFeed2  okse 0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88  0x0aaBC7C5380E01Bd30e555aCa966d9C8A86751f5  -- not configured
+    TWAPPriceFeed2  BOO 0x841fad6eae12c286d1fd18d1d525dffa75c7effe  0xff2a9c67993f37a8F7793EA286bFFDc57521a187
+    TWAPPriceFeed2  TOR 0x74E23dF9110Aa9eA0b6ff2fAEE01e740CA1c642e  0x6BF463087c8A20Ae5F983aE2109656caBE0772Dc
+    TWAPPriceFeed2  JulD 0xeff6fcfbc2383857dd66ddf57efffc00d58b7d9d  0xE7C22B2de57C3297419194256EDb73808F6f62d8
+    TWAPPriceFeed2  TOMB 0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7  0x97F8a06AE892d10c3BB1058F0eccfB81195Df1e4
+    TWAPPriceFeedManager    0xB4A96962CBD337B4016eD16bB7c532e4e38073eC
+        
+        

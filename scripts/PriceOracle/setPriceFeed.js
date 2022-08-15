@@ -49,13 +49,13 @@ async function main() {
         priceFeed = "0xF096872672F44d6EBA71458D74fe67F9a77a23B9"; // USDC Feed
         
         asset = "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"; // AVAX
-        priceFeed = "0xF096872672F44d6EBA71458D74fe67F9a77a23B9"; // AVAX Feed
+        priceFeed = "0x0A77230d17318075983913bC2145DB16C7366156"; // AVAX Feed
 
         // asset = "0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87"; // OKSE
         // priceFeed = "0xC146794e568D1B4087F2D79Bf5e3fBF18Fe5Ff76"; // OKSE Feed
     }
 
-    let signData = getSignData("setPriceFeed", 5, ["address", "address"], [asset, priceFeed])
+    let signData = getSignData("setPriceFeed", 6, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     await multiSigContract.setPriceFeed(signData, keys);

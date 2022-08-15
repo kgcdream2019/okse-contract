@@ -77,7 +77,7 @@ contract SpookySwapper {
       path[1] = WFTM;
       path[2] = USDC;
     }
-    else if(token0 == BOO && token1 == USDC) // OKSE-USDC pair
+    else if(token0 == BOO && token1 == USDC) // BOO-USDC pair
     {
       path = new address[](3);
       path[0] = BOO;
