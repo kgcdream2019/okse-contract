@@ -8,7 +8,7 @@ async function main() {
         chainId = 56;
         contractAddress = "0x40F5a9Bfd79585FFe39E93Efed59b84D27d6d593";
         _priceOracle = "0x515695578eECd92d7747897df7756967912E678a";
-        _swapper = "0x0aaBC7C5380E01Bd30e555aCa966d9C8A86751f5";
+        _swapper = "0x80e579540Bd73a59dA93c883Fb0a96d8Fb7a19A9";
         _limitManager = "0x9666657d324F866DA07E418C91628Fd399088f37"
         _levelManager = "0x25994d5f8b7984AfDEb8c935B0b12CA8a6956D37"
         _marketManager = "0x4fc6321F218C1eb8E959F97bD6F918AC738e7f7c"
@@ -43,7 +43,7 @@ async function main() {
     const multiSigContract = await ethers.getContractAt("OkseCard", contractAddress);
 
 
-    let signData = getSignData("setContractAddress", 5, ["address", "address", "address", "address", "address", "address"],
+    let signData = getSignData("setContractAddress", 6, ["address", "address", "address", "address", "address", "address"],
         [_priceOracle, _swapper, _limitManager, _levelManager, _marketManager, _cashbackManager])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);

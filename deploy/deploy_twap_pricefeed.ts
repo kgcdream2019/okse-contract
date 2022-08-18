@@ -18,6 +18,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     });
 
   }
+  else if(network.name === "bscmainnet"){
+    const USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // BUSD
+    const pancakeswapRouter = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // spookyswap router
+    const TOR = "0x1d6cbdc6b29c6afbae65444a1f65ba9252b8ca83";
+    const TorPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
+      from: deployer,
+      args: [TOR, USDT, pancakeswapRouter],
+      log: true,
+    });
+  }
 };
 export default func;
 func.tags = ["TWAPPriceFeed"];

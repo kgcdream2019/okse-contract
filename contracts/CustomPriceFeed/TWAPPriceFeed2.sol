@@ -137,7 +137,7 @@ contract TWAPPriceFeed2 is AggregatorV3Interface {
         testAmountsIn = 1 ether;
         owner = msg.sender;
         _decimals = 8;
-        _description = "custom price feed 2";
+        _description = "twap price feed 2";
         _version = 1;
     }
 
