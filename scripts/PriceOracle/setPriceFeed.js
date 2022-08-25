@@ -25,8 +25,11 @@ async function main() {
         // asset = "0x1d6cbdc6b29c6afbae65444a1f65ba9252b8ca83"; // Tor
         // priceFeed = "0xff2a9c67993f37a8F7793EA286bFFDc57521a187"; // TwapPriceFeed
 
-        asset = "0x2859e4544C4bB03966803b044A93563Bd2D0DD4D"; // SHIB
-        priceFeed = "0x3BE94aD5dDB81119ab88B1771f579C2D7a44A7f3"; // TwapPriceFeed
+        // asset = "0x2859e4544C4bB03966803b044A93563Bd2D0DD4D"; // SHIB
+        // priceFeed = "0x3BE94aD5dDB81119ab88B1771f579C2D7a44A7f3"; // TWAPPriceFeed2
+
+        asset = "0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5"; // HAY
+        priceFeed = "0xf185EbbB4661eFf878e03af42A20D5e69BBE070c"; // TwapPriceFeed
         
     }
     else if (network.name === "fantom") {
@@ -62,7 +65,7 @@ async function main() {
         // priceFeed = "0xC146794e568D1B4087F2D79Bf5e3fBF18Fe5Ff76"; // OKSE Feed
     }
 
-    let signData = getSignData("setPriceFeed", 19, ["address", "address"], [asset, priceFeed])
+    let signData = getSignData("setPriceFeed", 20, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     await multiSigContract.setPriceFeed(signData, keys);
