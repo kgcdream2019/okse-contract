@@ -28,8 +28,11 @@ async function main() {
         // asset = "0x2859e4544C4bB03966803b044A93563Bd2D0DD4D"; // SHIB
         // priceFeed = "0x3BE94aD5dDB81119ab88B1771f579C2D7a44A7f3"; // TWAPPriceFeed2
 
-        asset = "0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5"; // HAY
-        priceFeed = "0xf185EbbB4661eFf878e03af42A20D5e69BBE070c"; // TwapPriceFeed
+        // asset = "0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5"; // HAY
+        // priceFeed = "0xf185EbbB4661eFf878e03af42A20D5e69BBE070c"; // TwapPriceFeed
+
+        asset = "0xAD6742A35fB341A9Cc6ad674738Dd8da98b94Fb1"; // WOM
+        priceFeed = "0xeEEe4D6465d2D5A341340f5dcD7fD0c379056Fe6"; // TwapPriceFeed
         
     }
     else if (network.name === "fantom") {
@@ -61,11 +64,14 @@ async function main() {
         asset = "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"; // AVAX
         priceFeed = "0x0A77230d17318075983913bC2145DB16C7366156"; // AVAX Feed
 
+        asset = "0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd"; // JOE
+        priceFeed = "0x02d35d3a8ac3e1626d3ee09a78dd87286f5e8e3a"; // JOE Feed
+
         // asset = "0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87"; // OKSE
         // priceFeed = "0xC146794e568D1B4087F2D79Bf5e3fBF18Fe5Ff76"; // OKSE Feed
     }
 
-    let signData = getSignData("setPriceFeed", 20, ["address", "address"], [asset, priceFeed])
+    let signData = getSignData("setPriceFeed", 23, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     await multiSigContract.setPriceFeed(signData, keys);

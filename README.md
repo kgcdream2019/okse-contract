@@ -128,19 +128,32 @@ Daily limits
         
     -bsc
 
-    TWAPPriceFeedManager    0xb81C987Fede22fF2095808713C01B61944792Db1
+        TWAPPriceFeedManager    0xb81C987Fede22fF2095808713C01B61944792Db1
 
-    TWAPPriceFeed  TOR 0x1d6cbdc6b29c6afbae65444a1f65ba9252b8ca83    0xff2a9c67993f37a8F7793EA286bFFDc57521a187      
-    TWAPPriceFeed2 SHIB 0x2859e4544C4bB03966803b044A93563Bd2D0DD4D    0x3BE94aD5dDB81119ab88B1771f579C2D7a44A7f3      
+        Add TOR token on BSC
+            token address 0x1d6cbdc6b29c6afbae65444a1f65ba9252b8ca83
+            TwapPriceFeed   0xff2a9c67993f37a8F7793EA286bFFDc57521a187
 
-Add TOR token on BSC
-    token address 0x1d6cbdc6b29c6afbae65444a1f65ba9252b8ca83
-    TwapPriceFeed   0xff2a9c67993f37a8F7793EA286bFFDc57521a187
+        Add SHIB on BSC
+            token address       0x2859e4544C4bB03966803b044A93563Bd2D0DD4D
+            pancakeswapper      0x80e579540Bd73a59dA93c883Fb0a96d8Fb7a19A9
+            TWAPPriceFeed2		0x3BE94aD5dDB81119ab88B1771f579C2D7a44A7f3
 
-Add SHIB 0x2859e4544C4bB03966803b044A93563Bd2D0DD4D
-    pancakeswapper      0x80e579540Bd73a59dA93c883Fb0a96d8Fb7a19A9
-    TWAPPriceFeed2		0x3BE94aD5dDB81119ab88B1771f579C2D7a44A7f3
+        Add HAY (Hay Stablecoin) on BSC    
+            token address       0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5
+            pair Hay-BUSD
+            TWAPPriceFeed           0xf185EbbB4661eFf878e03af42A20D5e69BBE070c
 
-Add HAY (Hay Stablecoin)    0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5
-    pair Hay-BUSD
-    TWAPPriceFeed           0xf185EbbB4661eFf878e03af42A20D5e69BBE070c
+        Add Wombat Token(WOM) on bsc       
+            token address       0xad6742a35fb341a9cc6ad674738dd8da98b94fb1
+            pair    WOM-BUSD
+            TWAPPriceFeed       0xeEEe4D6465d2D5A341340f5dcD7fD0c379056Fe6
+    
+    -AVAXC
+
+        TWAPPriceFeedManager        0x0aaBC7C5380E01Bd30e555aCa966d9C8A86751f5
+
+        Add joe on avaxc
+            token address       0x6e84a6216eA6dACC71eE8E6b0a5B7322EEbC0fDd
+            pair JOE-AVAX       7M, JOE-USDC 0.9M
+            chainlink price feed       0x02d35d3a8ac3e1626d3ee09a78dd87286f5e8e3a    

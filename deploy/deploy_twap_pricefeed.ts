@@ -27,10 +27,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     //   args: [TOR, USDT, pancakeswapRouter],
     //   log: true,
     // });
-    const HAY = "0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5";
-    const TorPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
+    // const HAY = "0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5";
+    // const TorPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
+    //   from: deployer,
+    //   args: [HAY, USDT, pancakeswapRouter],
+    //   log: true,
+    // });
+    const WOM = "0xAD6742A35fB341A9Cc6ad674738Dd8da98b94Fb1";
+    const WomPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
       from: deployer,
-      args: [HAY, USDT, pancakeswapRouter],
+      args: [WOM, USDT, pancakeswapRouter],
       log: true,
     });
     

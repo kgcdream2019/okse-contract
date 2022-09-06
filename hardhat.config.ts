@@ -92,6 +92,10 @@ export default {
       url: `https://api.avax.network/ext/bc/C/rpc`,
       accounts: [`0x${process.env.PRIVATE_KEY}`],
     },
+    okex: {
+      url: `https://exchainrpc.okex.org`,
+      accounts: [`0x${process.env.PRIVATE_KEY}`],
+    },
   },
   etherscan: {
     // Your API key for Etherscan
