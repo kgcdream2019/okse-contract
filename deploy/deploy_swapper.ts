@@ -30,6 +30,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       log: true,
     });
   }
+  if(network.name === "avaxc") {
+    const factory = "0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10"; // traderjoe factory
+    const TraderjoeSwapper = await deploy("TraderJoeSwapper", {
+      from: deployer,
+      args: [factory],
+      log: true,
+    });
+  }
 };
 export default func;
 func.tags = ["Swapper"];

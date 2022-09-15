@@ -148,6 +148,10 @@ Daily limits
             token address       0xad6742a35fb341a9cc6ad674738dd8da98b94fb1
             pair    WOM-BUSD
             TWAPPriceFeed       0xeEEe4D6465d2D5A341340f5dcD7fD0c379056Fe6
+        
+        OKSE on BSC
+            token address       0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875
+            TWAPPriceFeed2      0x166088f58ca5A527F9C39E287Ee154bC0746140d
     
     -AVAXC
 

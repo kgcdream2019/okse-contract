@@ -10,8 +10,10 @@ contract TraderJoeSwapper {
   // factory address for AMM dex, normally we use spookyswap on fantom chain.
   address public factory;
   address public constant WAVAX = 0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7;
-  address public constant USDC = 0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E;
+  // address public constant USDC = 0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E;
+  address public constant USDC = 0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664;
   address public constant OKSE = 0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87;
+  
 
   constructor(address _factory) {
     factory = _factory;
