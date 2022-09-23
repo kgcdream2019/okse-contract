@@ -152,6 +152,9 @@ Daily limits
         OKSE on BSC
             token address       0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875
             TWAPPriceFeed2      0x166088f58ca5A527F9C39E287Ee154bC0746140d
+
+        Add VOLT token on bsc
+            token address       
     
     -AVAXC
 
