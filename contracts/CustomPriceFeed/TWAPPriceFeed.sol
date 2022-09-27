@@ -114,9 +114,11 @@ contract TWAPPriceFeed is AggregatorV3Interface {
     function setTwapEnable(bool _bEnabled) public onlyOwner {
         _twapEnabled = _bEnabled;
     }
+
     function setPeriod(uint256 _period) public onlyOwner {
         PERIOD = _period;
     }
+
     function decimals() external view override returns (uint8) {
         return _decimals;
     }
@@ -128,7 +130,7 @@ contract TWAPPriceFeed is AggregatorV3Interface {
     function version() external view override returns (uint256) {
         return _version;
     }
-    
+
     function twapEnabled() external view returns (bool) {
         return _twapEnabled;
     }
@@ -191,41 +193,47 @@ contract TWAPPriceFeed is AggregatorV3Interface {
             amountIn,
             path
         );
-        int256 _dec = _decimals +
-            ERC20Interface(TOKEN).decimals() -
-            ERC20Interface(USDC).decimals();
+        uint256 _dec = _decimals + ERC20Interface(TOKEN).decimals();
+        uint256 usdcDecimal = ERC20Interface(USDC).decimals();
         int256 price;
-        if (_dec >= 0) {
+        if (_dec >= usdcDecimal) {
             price = int256(
-                (amounts[1].mul(uint256(10**uint256(_dec)))).div(testAmountsIn)
+                (amounts[1].mul(uint256(10**uint256(_dec - usdcDecimal)))).div(
+                    testAmountsIn
+                )
             );
         } else {
             price = int256(
-                amounts[1].div(uint256(10**uint256(-_dec))).div(testAmountsIn)
-            );
-        }
-        return price;
-    }
-    // you can get precise price after twice calls of update function 
-    function getPriceTWAP() public view returns (int256) {
-        uint256 amountIn = testAmountsIn;
-        uint256 amountOut = consult(TOKEN, amountIn);
-        int256 _dec = _decimals +
-            ERC20Interface(TOKEN).decimals() -
-            ERC20Interface(USDC).decimals();
-        int256 price;
-        if (_dec >= 0) {
-            price = int256(
-                (amountOut.mul(uint256(10**uint256(_dec)))).div(testAmountsIn)
-            );
-        } else {
-            price = int256(
-                amountOut.div(uint256(10**uint256(-_dec))).div(testAmountsIn)
+                amounts[1].div(uint256(10**uint256(usdcDecimal - _dec))).div(
+                    testAmountsIn
+                )
             );
         }
         return price;
     }
 
+    // you can get precise price after twice calls of update function
+    function getPriceTWAP() public view returns (int256) {
+        uint256 amountIn = testAmountsIn;
+        uint256 amountOut = consult(TOKEN, amountIn);
+        uint256 _dec = _decimals + ERC20Interface(TOKEN).decimals();
+        uint256 usdcDecimal = ERC20Interface(USDC).decimals();
+        int256 price;
+        if (_dec >= usdcDecimal) {
+            price = int256(
+                (amountOut.mul(uint256(10**uint256(_dec - usdcDecimal)))).div(
+                    testAmountsIn
+                )
+            );
+        } else {
+            price = int256(
+                amountOut.div(uint256(10**uint256(usdcDecimal - _dec))).div(
+                    testAmountsIn
+                )
+            );
+        }
+        return price;
+    }
 
     // note this will always return 0 before update has been called successfully for the first time.
     function consult(address token, uint256 amountIn)
@@ -233,7 +241,10 @@ contract TWAPPriceFeed is AggregatorV3Interface {
         view
         returns (uint256 amountOut)
     {
-        (address token0, address token1) = UniswapV2Library.sortTokens(TOKEN, USDC);
+        (address token0, address token1) = UniswapV2Library.sortTokens(
+            TOKEN,
+            USDC
+        );
         if (token == token0) {
             amountOut = price0Average.mul(amountIn).decode144();
         } else {

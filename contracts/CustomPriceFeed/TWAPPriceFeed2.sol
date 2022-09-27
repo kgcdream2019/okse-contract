@@ -240,17 +240,20 @@ contract TWAPPriceFeed2 is AggregatorV3Interface {
             amountIn,
             path
         );
-        int256 _dec = _decimals +
-            ERC20Interface(TOKEN).decimals() -
-            ERC20Interface(USDC).decimals();
+        uint256 _dec = _decimals + ERC20Interface(TOKEN).decimals();
+        uint256 usdcDecimal = ERC20Interface(USDC).decimals();
         int256 price;
-        if (_dec >= 0) {
+        if (_dec >= usdcDecimal) {
             price = int256(
-                (amounts[2].mul(uint256(10**uint256(_dec)))).div(testAmountsIn)
+                (amounts[2].mul(uint256(10**uint256(_dec - usdcDecimal)))).div(
+                    testAmountsIn
+                )
             );
         } else {
             price = int256(
-                amounts[2].div(uint256(10**uint256(-_dec))).div(testAmountsIn)
+                amounts[2].div(uint256(10**uint256(usdcDecimal - _dec))).div(
+                    testAmountsIn
+                )
             );
         }
         return price;
@@ -261,17 +264,20 @@ contract TWAPPriceFeed2 is AggregatorV3Interface {
         uint256 amountIn = testAmountsIn;
         uint256 amountOut1 = consult(TOKEN, amountIn);
         uint256 amountOut = consult2(WETH, amountOut1);
-        int256 _dec = _decimals +
-            ERC20Interface(TOKEN).decimals() -
-            ERC20Interface(USDC).decimals();
+        uint256 _dec = _decimals + ERC20Interface(TOKEN).decimals();
+        uint256 usdcDecimal = ERC20Interface(USDC).decimals();
         int256 price;
-        if (_dec >= 0) {
+        if (_dec >= usdcDecimal) {
             price = int256(
-                (amountOut.mul(uint256(10**uint256(_dec)))).div(testAmountsIn)
+                (amountOut.mul(uint256(10**uint256(_dec - usdcDecimal)))).div(
+                    testAmountsIn
+                )
             );
         } else {
             price = int256(
-                amountOut.div(uint256(10**uint256(-_dec))).div(testAmountsIn)
+                amountOut.div(uint256(10**uint256(usdcDecimal - _dec))).div(
+                    testAmountsIn
+                )
             );
         }
         return price;

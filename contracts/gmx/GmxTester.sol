@@ -28,9 +28,9 @@ contract GmxTester is Ownable {
             _path,
             weth, //_indexToken,
             0, //_minOut,
-            0x2498513860589c3f819d1d71ef0, //_sizeDelta,
+            0xDBBEBE76ECA1B12E19D0000000, //_sizeDelta,
             true, //_isLong,
-            0x126a33ea9bc5c820be10cb80000, //_acceptablePrice,
+            0xDBBEBE76ECA1B12E19D0000000, //_acceptablePrice,
             0x470de4df820000, //_executionFee,
             0 //_referralCode
         );

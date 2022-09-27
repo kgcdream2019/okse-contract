@@ -38,6 +38,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       log: true,
     });
   }
+  if(network.name === "okex") {
+    const factory = "0x709102921812B3276A65092Fe79eDfc76c4D4AFe"; // cherryswap factory
+    const CherrySwapper = await deploy("CherrySwapper", {
+      from: deployer,
+      args: [factory],
+      log: true,
+    });
+  }
 };
 export default func;
 func.tags = ["Swapper"];

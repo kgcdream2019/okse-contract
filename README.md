@@ -67,7 +67,7 @@
     ································|·············|············································|
     |  OkseCardPriceOracle          ·      6.166  · 0x515695578eECd92d7747897df7756967912E678a │
     ································|·············|············································|
-    |   Swapper                     ·      4.235  · 0x0aaBC7C5380E01Bd30e555aCa966d9C8A86751f5 │
+    |   Swapper                     ·      4.235  · 0x0aaBC7C5380E01Bd30e555aCa966d9C8A86751f5 │  0xde91e495d0b79f74e9cAc6c2bdcf2c07d9Aba74D
     ································|·············|············································|
     |  OkseToken                    ·      2.505  · 0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875 │
     ································|·············|············································|
@@ -154,7 +154,12 @@ Daily limits
             TWAPPriceFeed2      0x166088f58ca5A527F9C39E287Ee154bC0746140d
 
         Add VOLT token on bsc
-            token address       
+            token address       0x7db5af2B9624e1b3B4Bb69D6DeBd9aD1016A58Ac
+            TWAPPriceFeed2      0x536CEf7F539Ab4C71950d32b12a146bed7EDf084
+        
+        Add ARV token on bsc
+            token address       0x6679eB24F59dFe111864AEc72B443d1Da666B360
+            TWAPPriceFeed2      0x750632A9a95bf557da96203219d9aE2C98Cd0A96   
     
     -AVAXC
 

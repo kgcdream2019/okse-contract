@@ -125,17 +125,20 @@ contract CustomPriceFeed is AggregatorV3Interface {
             amountIn,
             path
         );
-        int256 _dec = _decimals +
-            ERC20Interface(token).decimals() -
-            ERC20Interface(USDC).decimals();
+        uint256 _dec = _decimals + ERC20Interface(token).decimals();
+        uint256 usdcDecimal = ERC20Interface(USDC).decimals();
         int256 price;
-        if (_dec >= 0) {
+        if (_dec >= usdcDecimal) {
             price = int256(
-                (amounts[1].mul(uint256(10**uint256(_dec)))).div(testAmountsIn)
+                (amounts[1].mul(uint256(10**uint256(_dec - usdcDecimal)))).div(
+                    testAmountsIn
+                )
             );
         } else {
             price = int256(
-                amounts[1].div(uint256(10**uint256(-_dec))).div(testAmountsIn)
+                amounts[1].div(uint256(10**uint256(usdcDecimal - _dec))).div(
+                    testAmountsIn
+                )
             );
         }
         return price;

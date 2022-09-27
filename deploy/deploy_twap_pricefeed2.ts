@@ -32,37 +32,47 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       args: [JulD, USDT, WETH, spookyRouter],
       log: true,
     });
-    const BooPriceFeed_Implementation = await deploy('TWAPPriceFeed2', {
+    const BooPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
       from: deployer,
       args: [BOO, USDT, WETH, spookyRouter],
       log: true,
-    })
+    });
 
-    const TombPriceFeed_Implementation = await deploy('TWAPPriceFeed2', {
+    const TombPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
       from: deployer,
       args: [TOMB, USDT, WETH, spookyRouter],
       log: true,
-    })
-
-
+    });
   }
   if (network.name === "bscmainnet") {
     const USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // BUSD
-    const okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE
+    // const okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE
     const pancakeRouter = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // pancakeswap router
     const WETH = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
-    const OksePriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
-      from: deployer,
-      args: [okse, USDT, WETH, pancakeRouter],
-      log: true,
-    });
-    
+    // const OksePriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    //   from: deployer,
+    //   args: [okse, USDT, WETH, pancakeRouter],
+    //   log: true,
+    // });
+
     // const SHIB = "0x2859e4544C4bB03966803b044A93563Bd2D0DD4D"; // SHIB
     // const SHIBPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
     //   from: deployer,
     //   args: [SHIB, USDT, WETH, pancakeRouter],
     //   log: true,
     // });
+    // const VOLT = "0x7db5af2B9624e1b3B4Bb69D6DeBd9aD1016A58Ac"; // VOLT
+    // const VOLTPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    //   from: deployer,
+    //   args: [VOLT, USDT, WETH, pancakeRouter],
+    //   log: true,
+    // });
+    const ARV = "0x6679eB24F59dFe111864AEc72B443d1Da666B360"; // ARV
+    const ARVTPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+      from: deployer,
+      args: [ARV, USDT, WETH, pancakeRouter],
+      log: true,
+    });
   }
   if (network.name === "avaxc") {
     const USDT = "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"; // USDC

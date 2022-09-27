@@ -49,10 +49,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   );
 
   // address _WETH, address _USDT, address _okseAddress, address _priceOracle, address _factory
-  var _WETH: string; // WETH
-  var USDT: string; // USDC
-  var okse: string; // OKSE
-  var factory: string; // factory
+  let _WETH: string; // WETH
+  let USDT: string; // USDC
+  let okse: string; // OKSE
+  let factory: string; // factory
 
   let swapper: any;
   if (network.name === "fantom") {
