@@ -34,6 +34,16 @@ async function main() {
         _marketManager = "0x30342EBb1fa044A9BBFd4256973B5f551e654103"
         _cashbackManager = "0x4fc6321F218C1eb8E959F97bD6F918AC738e7f7c";
     }
+    else if (network.name === "okex") {
+        chainId = 66
+        contractAddress = "0xC6ff41994413fFc01b25c47BCdDf7c9D277d6059";
+        _priceOracle = "0xff2a9c67993f37a8F7793EA286bFFDc57521a187";
+        _swapper = "0xb2c4A6b8febDCD4D56c402D7677AD5f62d36a557";
+        _limitManager = "0xb81C987Fede22fF2095808713C01B61944792Db1"
+        _levelManager = "0x362B557528D3B6E1F50A152f0aa27DA9762c5569"
+        _marketManager = "0x3CE2AFD4dA06a09F8b4c5715Ff74E83EAC3633d0"
+        _cashbackManager = "0xB1152Aaf71c44a8292d550c8c077D6Fc998D9CB9";
+    }
     else {
         throw "invalid network"
     }
@@ -43,7 +53,7 @@ async function main() {
     const multiSigContract = await ethers.getContractAt("OkseCard", contractAddress);
 
 
-    let signData = getSignData("setContractAddress", 6, ["address", "address", "address", "address", "address", "address"],
+    let signData = getSignData("setContractAddress", 7, ["address", "address", "address", "address", "address", "address"],
         [_priceOracle, _swapper, _limitManager, _levelManager, _marketManager, _cashbackManager])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);

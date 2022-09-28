@@ -11,7 +11,7 @@ contract CherrySwapper is Ownable {
     // factory address for AMM dex, normally we use spookyswap on fantom chain.
     address public factory;
     address public constant WOKT = 0x8F8526dbfd6E38E3D8307702cA8469Bae6C56C15;
-    address public constant USDC = 0xc946DAf81b08146B1C7A8Da2A851Ddf2B3EAaf85;
+    address public constant USDT = 0x382bB369d343125BfB2117af9c149795C6C65C50;
     mapping(address => bool) public tokenList;
     address public constant OKSE = 0xA844C05ae51DdafA6c4d5c801DE1Ef5E6F626bEC;
     event TokenEnableUpdaated(address tokenAddr, bool bEnable);
@@ -69,11 +69,11 @@ contract CherrySwapper is Ownable {
         view
         returns (address[] memory path)
     {
-        if (tokenList[token0] && token1 == USDC) {
+        if (tokenList[token0] && token1 == USDT) {
             path = new address[](3);
             path[0] = token0;
             path[1] = WOKT;
-            path[2] = USDC;
+            path[2] = USDT;
         } else {
             path = new address[](2);
             path[0] = token0;

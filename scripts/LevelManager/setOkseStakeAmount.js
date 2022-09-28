@@ -15,6 +15,9 @@ async function main() {
     else if (network.name === "avaxc") {
         contractAddress = "0x40F5a9Bfd79585FFe39E93Efed59b84D27d6d593";
         chainId = 43114;
+    } else if (network.name === "okex") {
+        contractAddress = "0x362B557528D3B6E1F50A152f0aa27DA9762c5569";
+        chainId = 66;
     }
 
     const multiSigContract = await ethers.getContractAt("LevelManager", contractAddress);
@@ -25,7 +28,7 @@ async function main() {
         "100000000000000000000000",
         "250000000000000000000000"
     ]
-    let index = 0;
+    let index = 4;
     let _amounts = OkseStakeAmounts[index];
 
     let signData = getSignData("setOkseStakeAmount", index, ["uint256", "uint256"], [index, _amounts])

@@ -90,7 +90,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   if (network.name === "okex") {
     _WETH = "0x8f8526dbfd6e38e3d8307702ca8469bae6c56c15"; // WOKT
-    USDT = "0xc946daf81b08146b1c7a8da2a851ddf2b3eaaf85";  // USDC
+    USDT = "0x382bb369d343125bfb2117af9c149795c6c65c50";  // USDT
     okse = "0xA844C05ae51DdafA6c4d5c801DE1Ef5E6F626bEC";  // OKSE 
     factory = "0x709102921812B3276A65092Fe79eDfc76c4D4AFe"; // cherryswap factory
     swapper = await deploy("CherrySwapper", {

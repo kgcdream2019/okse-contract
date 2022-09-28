@@ -82,6 +82,19 @@ async function main() {
         // asset = "0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87"; // OKSE
         // priceFeed = "0xC146794e568D1B4087F2D79Bf5e3fBF18Fe5Ff76"; // OKSE Feed
     }
+    else if(network.name === "okex"){
+        chainId = 66;
+        const WOKT = "0x8f8526dbfd6e38e3d8307702ca8469bae6c56c15"; //WOKT
+        const USDT = "0x382bb369d343125bfb2117af9c149795c6c65c50"; // USDT
+        const okse = "0xA844C05ae51DdafA6c4d5c801DE1Ef5E6F626bEC";  // OKSE 
+        asset = WOKT
+        priceFeed = "0x72B803Dd976E2277D8c16163703BE2cDe0E0E8D3";
+        asset = USDT
+        priceFeed = "0x61942e306965184cD92BE58818F99EC265d62B6F";
+        asset = okse
+        priceFeed = "0xde91e495d0b79f74e9cAc6c2bdcf2c07d9Aba74D";
+        
+    }
 
     let signData = getSignData("setPriceFeed", 27, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);

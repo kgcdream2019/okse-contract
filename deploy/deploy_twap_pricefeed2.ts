@@ -85,6 +85,18 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       log: true,
     });
   }
+  if (network.name === "okex") {
+    const USDT = "0x382bb369d343125bfb2117af9c149795c6c65c50";
+    const okse = "0xA844C05ae51DdafA6c4d5c801DE1Ef5E6F626bEC"; // OKSE
+    const router = "0x865bfde337C8aFBffF144Ff4C29f9404EBb22b15";
+    const WOKT = "0x8f8526dbfd6e38e3d8307702ca8469bae6c56c15";
+
+    const OksePriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+      from: deployer,
+      args: [okse, USDT, WOKT, router],
+      log: true,
+    });
+  }
 };
 export default func;
 func.tags = ["TWAPPriceFeed2"];

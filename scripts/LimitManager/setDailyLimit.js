@@ -16,7 +16,10 @@ async function main() {
         contractAddress = "0x25994d5f8b7984AfDEb8c935B0b12CA8a6956D37";
         chainId = 43114;
     }
-
+    else if (network.name === "okex") {
+        contractAddress = "0xb81C987Fede22fF2095808713C01B61944792Db1";
+        chainId = 66;
+    }
     const multiSigContract = await ethers.getContractAt("LimitManager", contractAddress);
     const limits = [
         "250000000000000000000",
@@ -25,7 +28,7 @@ async function main() {
         "5000000000000000000000",
         "10000000000000000000000",
         "50000000000000000000000"]
-    let index = 0;
+    let index = 5;
     let _amounts = limits[index];
 
     let signData = getSignData("setDailyLimit", index, ["uint256", "uint256"], [index, _amounts])
