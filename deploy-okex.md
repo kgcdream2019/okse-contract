@@ -16,3 +16,10 @@ OkseCard init txHash =  0x7ed36c17713ff0e7a68879dc5945c0614167fb2081fa668b0325ae
 Done in 176.72s.
 
 deploying "CherrySwapper" (tx: 0x9732ddeb3f5f773147af46bf9cdeb61949fd5d10821a62eb038519dd764f542d)...: deployed at 0xC146794e568D1B4087F2D79Bf5e3fBF18Fe5Ff76 with 1123609 gas
+
+
+
+==truffle deploy================================================================
+    
+    OksePriceOracle  contract address:    0xE91DE865117EFAFfCC4dAD5673B0b12f6168511c
+    Converter                               0x0aaBC7C5380E01Bd30e555aCa966d9C8A86751f5

@@ -193,8 +193,6 @@ abstract contract Context {
 
 // File @openzeppelin/contracts/access/Ownable.sol@v3.4.2
 
-// SPDX-License-Identifier: MIT
-
 pragma solidity >=0.6.0 <0.8.0;
 
 /**
@@ -263,8 +261,6 @@ abstract contract Ownable is Context {
 
 
 // File contracts/Swapper/CherrySwapper.sol
-
-//SPDX-License-Identifier: LICENSED
 
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
@@ -355,4 +351,3 @@ contract CherrySwapper is Ownable {
         _setTokenEnable(tokenAddr, bEnable);
     }
 }
-Done in 25.01s.
