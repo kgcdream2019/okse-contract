@@ -216,6 +216,7 @@ Daily limits
         
         add LUNA token on bsc
             token address       0x156ab3346823B651294766e23e6Cf87254d68962
+            TWAPPriceFeed2      0xe2185a1ebB2303DE5B9A9776365538fcDD0D7525
 
     
     -AVAXC
