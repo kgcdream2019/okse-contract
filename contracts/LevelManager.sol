@@ -7,6 +7,7 @@ import "./MultiSigOwner.sol";
 import "./Manager.sol";
 import "./interfaces/ICard.sol";
 import "./libraries/SafeMath.sol";
+
 contract LevelManager is MultiSigOwner, Manager {
     using SafeMath for uint256;
     // current user level of each user. 1~5 level enabled.
@@ -94,6 +95,7 @@ contract LevelManager is MultiSigOwner, Manager {
                 emit UserLevelChanged(userAddr, newLevel);
             } else {
                 // do somrthing ...
+                usersLevel[userAddr] = beforeLevel;
             }
         }
         return false;

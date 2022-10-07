@@ -58,6 +58,14 @@ contract PancakeSwapper is Ownable {
         return UniswapV2Library.getAmountsIn(factory, amountOut, path);
     }
 
+    function getAmountsOut(uint256 amountIn, address[] memory path)
+        external
+        view
+        returns (uint256[] memory amounts)
+    {
+        return UniswapV2Library.getAmountsOut(factory, amountIn, path);
+    }
+
     function GetReceiverAddress(address[] memory path)
         external
         view

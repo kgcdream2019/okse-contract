@@ -56,6 +56,14 @@ contract CherrySwapper is Ownable {
         return CherryLibrary.getAmountsIn(factory, amountOut, path);
     }
 
+    function getAmountsOut(uint256 amountIn, address[] memory path)
+        external
+        view
+        returns (uint256[] memory amounts)
+    {
+        return CherryLibrary.getAmountsOut(factory, amountIn, path);
+    }
+
     function GetReceiverAddress(address[] memory path)
         external
         view
