@@ -24,14 +24,14 @@ contract LevelManager is MultiSigOwner, Manager {
     event LevelValidationPeriodChanged(uint256 levelValidationPeriod);
 
     constructor(address _cardContract) Manager(_cardContract) {
-        // levelValidationPeriod = 30 days;
-        levelValidationPeriod = 10 minutes; //for testing
+        levelValidationPeriod = 1 days;
+        // levelValidationPeriod = 10 minutes; //for testing
         OkseStakeAmounts = [
-            1000 ether,
-            2500 ether,
-            10000 ether,
+            5000 ether,
             25000 ether,
-            100000 ether
+            50000 ether,
+            100000 ether,
+            250000 ether
         ];
     }
 
@@ -79,8 +79,14 @@ contract LevelManager is MultiSigOwner, Manager {
         uint256 newLevel = getLevel(
             ICard(cardContract).getUserOkseBalance(userAddr)
         );
-        uint256 beforeLevel = getLevel(beforeAmount);
-        if (newLevel != beforeLevel)
+        if (
+            usersOkseUpdatedTime[userAddr].add(levelValidationPeriod) <
+            block.timestamp
+        ) {
+            usersLevel[userAddr] = getLevel(beforeAmount);
+        }
+
+        if (newLevel != usersLevel[userAddr])
             usersOkseUpdatedTime[userAddr] = block.timestamp;
         if (newLevel == usersLevel[userAddr]) return true;
         if (newLevel < usersLevel[userAddr]) {
@@ -95,7 +101,6 @@ contract LevelManager is MultiSigOwner, Manager {
                 emit UserLevelChanged(userAddr, newLevel);
             } else {
                 // do somrthing ...
-                usersLevel[userAddr] = beforeLevel;
             }
         }
         return false;

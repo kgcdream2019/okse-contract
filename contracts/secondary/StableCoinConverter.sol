@@ -3,8 +3,8 @@ pragma solidity ^0.7.0;
 import "../libraries/SafeMath.sol";
 import "../interfaces/ERC20Interface.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interface/IWombatRouter.sol";
-import "./interface/ICelerBridge.sol";
+import "./interfaces/IWombatRouter.sol";
+import "./interfaces/ICelerBridge.sol";
 import "../libraries/TransferHelper.sol";
 
 contract StableCoinConverter is Ownable {

@@ -54,47 +54,47 @@ export default {
     },
     mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     ropsten: {
       url: `https://ropsten.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     rinkeby: {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     kovan: {
       url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     bscmainnet: {
       url: `https://bsc-dataseed.binance.org`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     matic: {
       url: `https://polygon-rpc.com/`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     fantom: {
       url: `https://rpc.ftm.tools/`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     fantomtestnet: {
       url: `https://rpc.testnet.fantom.network/`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     avaxc: {
       url: `https://api.avax.network/ext/bc/C/rpc`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
     okex: {
       url: `https://exchainrpc.okex.org`,
-      accounts: [`0x${process.env.PRIVATE_KEY}`],
+      accounts: [`${process.env.PRIVATE_KEY}`],
     },
   },
   etherscan: {

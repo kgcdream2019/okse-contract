@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../libraries/TransferHelper.sol";
 import "../interfaces/ISwapper.sol";
 import "../interfaces/IWETH9.sol";
+import "./interfaces/IRun.sol";
 
 contract SinkCharger is Ownable {
     using SafeMath for uint256;
