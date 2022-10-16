@@ -235,6 +235,11 @@ Daily limits
         USDT    TWAPPriceFeed   0x61942e306965184cD92BE58818F99EC265d62B6F
         OKSE    TWAPPriceFeed2  0xde91e495d0b79f74e9cAc6c2bdcf2c07d9Aba74D
 
-    StableCoinConverter  on BSC   0x09983F5A62801B8b36cf375657289a383Cea8f1e
+    StableCoinConverter  on BSC   0x537DCd1dDa4f5373bf2BCbBb38f48561309421de
+        exchanger = "0x19609B03C976CCA288fbDae5c21d4290e9a4aDD7";
+        token = "0xe9e7cea3dedca5984780bafc599bd69add087d56";
+        usdc = "0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d";
+        bridge = "0xdd90e5e87a2081dcf0391920868ebc2ffb81a1af";
+        usdcPool = "0x312bc7eaaf93f1c60dc5afc115fccde161055fb0";
 
    
