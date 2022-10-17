@@ -49,6 +49,9 @@ async function main() {
         asset = "0x156ab3346823B651294766e23e6Cf87254d68962"; // LUNA
         priceFeed = "0xe2185a1ebB2303DE5B9A9776365538fcDD0D7525"; // TwapPriceFeed2
         
+        asset = "0xbA2aE424d960c26247Dd6c32edC70B295c744C43"; // DOGE
+        priceFeed = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7"; // TwapPriceFeed2
+
     }
     else if (network.name === "fantom") {
         chainId = 250;
@@ -102,7 +105,7 @@ async function main() {
         
     }
 
-    let signData = getSignData("setPriceFeed", 31, ["address", "address"], [asset, priceFeed])
+    let signData = getSignData("setPriceFeed", 32, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     await multiSigContract.setPriceFeed(signData, keys);

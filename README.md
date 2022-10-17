@@ -217,6 +217,10 @@ Daily limits
         add LUNA token on bsc
             token address       0x156ab3346823B651294766e23e6Cf87254d68962
             TWAPPriceFeed2      0xe2185a1ebB2303DE5B9A9776365538fcDD0D7525
+        
+        add DOGE token on bsc
+            token address       0xbA2aE424d960c26247Dd6c32edC70B295c744C43      decimal 8
+            TWAPPriceFeed2      0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7      
 
     
     -AVAXC
@@ -235,6 +239,8 @@ Daily limits
         USDT    TWAPPriceFeed   0x61942e306965184cD92BE58818F99EC265d62B6F
         OKSE    TWAPPriceFeed2  0xde91e495d0b79f74e9cAc6c2bdcf2c07d9Aba74D
 
+    -ETH
+        
     StableCoinConverter  on BSC   0x537DCd1dDa4f5373bf2BCbBb38f48561309421de
         exchanger = "0x19609B03C976CCA288fbDae5c21d4290e9a4aDD7";
         token = "0xe9e7cea3dedca5984780bafc599bd69add087d56";

@@ -73,10 +73,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     //   args: [ARV, USDT, WETH, pancakeRouter],
     //   log: true,
     // });
-    const LUNA = "0x156ab3346823B651294766e23e6Cf87254d68962"; // LUNA
-    const LUNATPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    // const LUNA = "0x156ab3346823B651294766e23e6Cf87254d68962"; // LUNA
+    // const LUNATPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    //   from: deployer,
+    //   args: [LUNA, USDT, WETH, pancakeRouter],
+    //   log: true,
+    // });
+    const DOGE = "0xbA2aE424d960c26247Dd6c32edC70B295c744C43"; // DOGE
+    const DOGETPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
       from: deployer,
-      args: [LUNA, USDT, WETH, pancakeRouter],
+      args: [DOGE, USDT, WETH, pancakeRouter],
       log: true,
     });
   }
