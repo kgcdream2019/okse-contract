@@ -1,3 +1,5 @@
+// Sources flattened with hardhat v2.9.6 https://hardhat.org
+
 // File @openzeppelin/contracts/token/ERC20/IERC20.sol@v3.4.2
 
 // SPDX-License-Identifier: MIT
@@ -263,25 +265,31 @@ interface IWETH9 is IERC20 {
 pragma solidity ^0.7.0;
 
 interface ISwapper {
-  function _swap(
-    uint256[] memory amounts,
-    address[] memory path,
-    address _to
-  ) external;
+    function _swap(
+        uint256[] memory amounts,
+        address[] memory path,
+        address _to
+    ) external;
 
-  function getAmountsIn(
-    uint256 amountOut,
-    address[] memory path
-  ) external view returns (uint256[] memory amounts);
+    function getAmountsIn(uint256 amountOut, address[] memory path)
+        external
+        view
+        returns (uint256[] memory amounts);
 
-  function GetReceiverAddress(
-    address[] memory path
-  ) external view returns (address);
-  
-  function getOptimumPath(
-    address token0,
-    address token1
-  ) external view returns (address[] memory);
+    function getAmountsOut(uint256 amountIn, address[] memory path)
+        external
+        view
+        returns (uint256[] memory amounts);
+
+    function GetReceiverAddress(address[] memory path)
+        external
+        view
+        returns (address);
+
+    function getOptimumPath(address token0, address token1)
+        external
+        view
+        returns (address[] memory);
 }
 
 
@@ -971,10 +979,10 @@ abstract contract SignerRole is Context {
 
 // File contracts/OkseCard.sol
 
-
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
+pragma abicoder v2;
 // We import this library to be able to use console.log
 // import "hardhat/console.sol";
 // This is the main building block for smart contracts.

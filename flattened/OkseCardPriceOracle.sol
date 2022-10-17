@@ -1,3 +1,5 @@
+// Sources flattened with hardhat v2.9.6 https://hardhat.org
+
 // File contracts/interfaces/ERC20Interface.sol
 
 //SPDX-License-Identifier: UNLICENSED

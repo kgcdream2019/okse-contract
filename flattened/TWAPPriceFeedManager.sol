@@ -1,3 +1,5 @@
+// Sources flattened with hardhat v2.9.6 https://hardhat.org
+
 // File contracts/CustomPriceFeed/TWAPPriceFeedManager.sol
 
 //SPDX-License-Identifier: LICENSED

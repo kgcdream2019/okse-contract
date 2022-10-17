@@ -1,3 +1,5 @@
+// Sources flattened with hardhat v2.9.6 https://hardhat.org
+
 // File contracts/MultiSigOwner.sol
 
 // SPDX-License-Identifier: LICENSED
@@ -136,6 +138,7 @@ contract MultiSigOwner {
 
 
 // File contracts/Manager.sol
+
 
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.

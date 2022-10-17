@@ -266,6 +266,7 @@ interface ERC20Interface {
 
 // File @openzeppelin/contracts/utils/Context.sol@v3.4.2
 
+
 pragma solidity >=0.6.0 <0.8.0;
 
 /*
@@ -356,6 +357,165 @@ abstract contract Ownable is Context {
         emit OwnershipTransferred(_owner, newOwner);
         _owner = newOwner;
     }
+}
+
+
+// File contracts/secondary/interfaces/IPool.sol
+
+pragma solidity ^0.7.6;
+
+interface IPool {
+    function getTokens() external view returns (address[] memory);
+
+    function addressOfAsset(address token) external view returns (address);
+
+    function deposit(
+        address token,
+        uint256 amount,
+        uint256 minimumLiquidity,
+        address to,
+        uint256 deadline,
+        bool shouldStake
+    ) external returns (uint256 liquidity);
+
+    function withdraw(
+        address token,
+        uint256 liquidity,
+        uint256 minimumAmount,
+        address to,
+        uint256 deadline
+    ) external returns (uint256 amount);
+
+    function withdrawFromOtherAsset(
+        address fromToken,
+        address toToken,
+        uint256 liquidity,
+        uint256 minimumAmount,
+        address to,
+        uint256 deadline
+    ) external returns (uint256 amount);
+
+    function swap(
+        address fromToken,
+        address toToken,
+        uint256 fromAmount,
+        uint256 minimumToAmount,
+        address to,
+        uint256 deadline
+    ) external returns (uint256 actualToAmount, uint256 haircut);
+
+    function quotePotentialDeposit(address token, uint256 amount)
+        external
+        view
+        returns (uint256 liquidity, uint256 reward);
+
+    function quotePotentialSwap(
+        address fromToken,
+        address toToken,
+        int256 fromAmount
+    ) external view returns (uint256 potentialOutcome, uint256 haircut);
+
+    function quotePotentialWithdraw(address token, uint256 liquidity)
+        external
+        view
+        returns (uint256 amount, uint256 fee);
+
+    function quoteAmountIn(
+        address fromToken,
+        address toToken,
+        int256 toAmount
+    ) external view returns (uint256 amountIn, uint256 haircut);
+}
+
+
+// File contracts/secondary/interfaces/IWombatRouter.sol
+
+pragma solidity ^0.7.6;
+interface IWombatRouter {
+    function getAmountOut(
+        address[] calldata tokenPath,
+        address[] calldata poolPath,
+        int256 amountIn
+    ) external view returns (uint256 amountOut, uint256[] memory haircuts);
+
+    /**
+     * @notice Returns the minimum input asset amount required to buy the given output asset amount
+     * (accounting for fees and slippage)
+     * Note: This function should be used as estimation only. The actual swap amount might
+     * be different due to precision error (the error is typically under 1e-6)
+     */
+    function getAmountIn(
+        address[] calldata tokenPath,
+        address[] calldata poolPath,
+        uint256 amountOut
+    ) external view returns (uint256 amountIn, uint256[] memory haircuts);
+
+    function swapExactTokensForTokens(
+        address[] calldata tokenPath,
+        address[] calldata poolPath,
+        uint256 fromAmount,
+        uint256 minimumToAmount,
+        address to,
+        uint256 deadline
+    ) external returns (uint256 amountOut);
+
+    function swapExactNativeForTokens(
+        address[] calldata tokenPath, // the first address should be WBNB
+        address[] calldata poolPath,
+        uint256 minimumamountOut,
+        address to,
+        uint256 deadline
+    ) external payable returns (uint256 amountOut);
+
+    function swapExactTokensForNative(
+        address[] calldata tokenPath, // the last address should be WBNB
+        address[] calldata poolPath,
+        uint256 amountIn,
+        uint256 minimumamountOut,
+        address to,
+        uint256 deadline
+    ) external returns (uint256 amountOut);
+
+    function addLiquidityNative(
+        IPool pool,
+        uint256 minimumLiquidity,
+        address to,
+        uint256 deadline,
+        bool shouldStake
+    ) external payable returns (uint256 liquidity);
+
+    function removeLiquidityNative(
+        IPool pool,
+        uint256 liquidity,
+        uint256 minimumAmount,
+        address to,
+        uint256 deadline
+    ) external returns (uint256 amount);
+
+    function removeLiquidityFromOtherAssetAsNative(
+        IPool pool,
+        address fromToken,
+        uint256 liquidity,
+        uint256 minimumAmount,
+        address to,
+        uint256 deadline
+    ) external returns (uint256 amount);
+}
+
+
+// File contracts/secondary/interfaces/ICelerBridge.sol
+
+pragma solidity ^0.7.6;
+
+interface ICelerBridge {
+    function send(
+        address _receiver,
+        address _token,
+        uint256 _amount,
+        uint64 _dstChainId,
+        uint64 _nonce,
+        uint32 _maxSlippage // slippage * 1M, eg. 0.5% -> 5000
+    ) external;
 }
 
 
@@ -499,146 +659,132 @@ library TransferHelper {
 }
 
 
-// File contracts/interfaces/ISwapper.sol
+// File contracts/secondary/StableCoinConverter.sol
 
 pragma solidity ^0.7.0;
-
-interface ISwapper {
-    function _swap(
-        uint256[] memory amounts,
-        address[] memory path,
-        address _to
-    ) external;
-
-    function getAmountsIn(uint256 amountOut, address[] memory path)
-        external
-        view
-        returns (uint256[] memory amounts);
-
-    function getAmountsOut(uint256 amountIn, address[] memory path)
-        external
-        view
-        returns (uint256[] memory amounts);
-
-    function GetReceiverAddress(address[] memory path)
-        external
-        view
-        returns (address);
-
-    function getOptimumPath(address token0, address token1)
-        external
-        view
-        returns (address[] memory);
-}
-
-
-// File contracts/interfaces/IWETH9.sol
-
-pragma solidity ^0.7.0;
-
-/// @title Interface for WETH9
-interface IWETH9 is IERC20 {
-    /// @notice Deposit ether to get wrapped ether
-    function deposit() external payable;
-
-    /// @notice Withdraw wrapped ether to get ether
-    function withdraw(uint256) external;
-}
-
-
-// File contracts/secondary/interfaces/IRun.sol
-
-pragma solidity ^0.7.0;
-
-interface IRun {
-    function run() external;
-}
-
-
-// File contracts/secondary/SinkCharger.sol
-
-pragma solidity ^0.7.0;
-contract SinkCharger is Ownable {
+contract StableCoinConverter is Ownable {
     using SafeMath for uint256;
-    address public sinkAddress;
-    uint256 public chargeAmount;
-    address public treasuryAddress;
     address public token;
-    address public weth;
-    address public swapper;
-    event WithdrawTokens(address token, address to, uint256 amount);
+    address public usdc;
+    address public bridge;
+    address public exchanger;
+    address public usdcPool;
+    uint256 public minAmount;
+    uint256 public slippage;
+
+    uint256 public constant UINT_MAX =
+        0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
+    address public receiver;
     event Executed(
         uint256 tokenBalance,
-        address treasuryAddress,
-        uint256 chargeAmount,
-        address sinkAddress
+        uint256 lastExecuteTime,
+        address bridge
     );
 
     constructor(
+        address _exchanger,
         address _token,
-        address _weth,
-        address _swapper
+        address _usdc,
+        address _bridge,
+        address _usdcPool
     ) {
-        sinkAddress = 0x7188C90D1BB7A66567dCEcDBe65882fa3dcE2FA3;
-        treasuryAddress = 0xf57F68e6bc75979feB128C1A2061EeD60695f190;
-        chargeAmount = 5 ether;
+        minAmount = 10000 ether;
+        slippage = 10000; // 1%
+        receiver = 0xa7E685c6db22198fC700fda27AC28E6275fDfC31; // receiver wallet
+        exchanger = _exchanger;
         token = _token;
-        weth = _weth;
-        swapper = _swapper;
+        usdc = _usdc;
+        bridge = _bridge;
+        usdcPool = _usdcPool;
     }
 
     function run() external {
-        // check balance of sink
-        address payable sinkPayable = payable(sinkAddress);
-        uint256 sinkBalance = sinkPayable.balance;
-        // decide amount to send sink
-        uint256 amount;
-        uint256 tokenBalance;
-        uint256[] memory amounts;
-        if (sinkBalance < chargeAmount) {
-            amount = chargeAmount.sub(sinkBalance);
-            address[] memory path = ISwapper(swapper).getOptimumPath(
-                token,
-                weth
-            );
-            amounts = ISwapper(swapper).getAmountsIn(amount, path);
-            // get token balance
-            tokenBalance = ERC20Interface(token).balanceOf(address(this));
-            if (tokenBalance == 0) return;
-            if (tokenBalance < amounts[0]) {
-                amounts = ISwapper(swapper).getAmountsOut(tokenBalance, path);
-            }
-            // swap token to weth
-            TransferHelper.safeTransfer(
-                path[0],
-                ISwapper(swapper).GetReceiverAddress(path),
-                amounts[0]
-            );
-            ISwapper(swapper)._swap(amounts, path, address(this));
-            // convert weth to eth
-            IWETH9(weth).withdraw(amounts[1]);
-            // send eth to sink
-            TransferHelper.safeTransferETH(sinkAddress, amounts[1]);
+        // check balance
+        uint256 tokenBalance = ERC20Interface(token).balanceOf(address(this));
+        require(tokenBalance >= minAmount, "balance is small");
+
+        // execute
+        if (exchanger != address(0)) {
+            swap(tokenBalance);
         }
-        // sent remained token to treasury
-        tokenBalance = ERC20Interface(token).balanceOf(address(this));
-        if (tokenBalance > 0) {
-            TransferHelper.safeTransfer(token, treasuryAddress, tokenBalance);
-        }
-        emit Executed(tokenBalance, treasuryAddress, amounts[1], sinkAddress);
+        tokenBalance = ERC20Interface(usdc).balanceOf(address(this));
+        send(tokenBalance, slippage);
+        uint256 lastExecuteTime = block.timestamp;
+        emit Executed(tokenBalance, lastExecuteTime, bridge);
     }
 
-    // verified
-    receive() external payable {
-        // require(msg.sender == WETH, 'Not WETH9');
+    function checkExecuteCondition() public view returns (bool) {
+        uint256 tokenBalance = ERC20Interface(token).balanceOf(address(this));
+        if (tokenBalance < minAmount) return false;
+        return true;
     }
 
     function getTokenBalance() public view returns (uint256) {
         return ERC20Interface(token).balanceOf(address(this));
     }
 
-    function setUintParams(uint256 _chargeAmount) public onlyOwner {
-        chargeAmount = _chargeAmount;
-        require(chargeAmount <= 5 ether, "over");
+    function approve(address token, address target) external {
+        ERC20Interface(token).approve(target, UINT_MAX);
+    }
+
+    function swap(uint256 amount) internal {
+        address[] memory tokenPath = new address[](2);
+        tokenPath[0] = token;
+        tokenPath[1] = usdc;
+
+        address[] memory poolPath = new address[](1);
+        poolPath[0] = usdcPool;
+
+        uint256 fromAmount = amount;
+        uint256 minimumToAmount = (amount * 999) / 1000;
+        address to = address(this);
+        uint256 deadline = block.timestamp + 15 minutes;
+        IWombatRouter(exchanger).swapExactTokensForTokens(
+            tokenPath,
+            poolPath,
+            fromAmount,
+            minimumToAmount,
+            to,
+            deadline
+        );
+    }
+
+    function send(uint256 amount, uint256 _slippage) internal {
+        address _receiver = receiver;
+        address _token = usdc;
+        uint256 _amount = amount;
+        uint64 _dstChainId = uint64(0x1);
+        uint64 _nonce = uint64(block.timestamp);
+        uint32 _maxSlippage = uint32(_slippage); // slippage * 1M, eg. 0.5% -> 5000
+        ICelerBridge(bridge).send(
+            _receiver,
+            _token,
+            _amount,
+            _dstChainId,
+            _nonce,
+            _maxSlippage
+        );
+    }
+
+    function runManual(uint256 _slippage) external onlyOwner {
+        // check balance
+        uint256 tokenBalance = ERC20Interface(token).balanceOf(address(this));
+
+        // execute
+        if (exchanger != address(0)) {
+            swap(tokenBalance);
+        }
+        tokenBalance = ERC20Interface(usdc).balanceOf(address(this));
+        send(tokenBalance, _slippage);
+        uint256 lastExecuteTime = block.timestamp;
+        emit Executed(tokenBalance, lastExecuteTime, bridge);
+    }
+
+    function setMinimumAmount(uint256 _minAmount) public onlyOwner {
+        minAmount = _minAmount;
+    }
+
+    function setSlippage(uint256 _slippage) external onlyOwner {
+        slippage = _slippage;
     }
 }

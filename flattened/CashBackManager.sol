@@ -1,3 +1,5 @@
+// Sources flattened with hardhat v2.9.6 https://hardhat.org
+
 // File contracts/interfaces/ERC20Interface.sol
 
 //SPDX-License-Identifier: UNLICENSED
@@ -259,7 +261,6 @@ contract MultiSigOwner {
 
 // File contracts/Manager.sol
 
-
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
@@ -281,10 +282,10 @@ contract Manager {
 
 // File contracts/CashBackManager.sol
 
-
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
+pragma abicoder v2;
 contract CashBackManager is MultiSigOwner, Manager {
     uint256 public constant MAX_LEVEL = 5;
     // Setting for cashback enable or disable

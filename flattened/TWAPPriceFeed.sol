@@ -1,3 +1,5 @@
+// Sources flattened with hardhat v2.9.6 https://hardhat.org
+
 // File contracts/interfaces/AggregatorV3Interface.sol
 
 //SPDX-License-Identifier: UNLICENSED
@@ -159,6 +161,7 @@ interface IUniswapV2Factory {
 
 
 // File contracts/Swapper/uniswapv2/interfaces/IUniswapV2Pair.sol
+
 pragma solidity >=0.5.0;
 
 interface IUniswapV2Pair {
@@ -634,7 +637,6 @@ library FullMath {
 
 // File contracts/libraries/Babylonian.sol
 
-
 pragma solidity >=0.4.0;
 
 // computes square roots using the babylonian method
@@ -997,7 +999,6 @@ library UniswapV2OracleLibrary {
 
 
 // File contracts/CustomPriceFeed/TWAPPriceFeed.sol
-
 
 pragma solidity ^0.7.0;
 contract TWAPPriceFeed is AggregatorV3Interface {

@@ -1,10 +1,11 @@
 // Sources flattened with hardhat v2.9.6 https://hardhat.org
 
-// File contracts/Swapper/cherryswap/interfaces/ICherryPair.sol
+// File contracts/Swapper/pancakeswap/interfaces/IUniswapV2Pair.sol
 
+//SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.5.0;
 
-interface ICherryPair {
+interface IUniswapV2Pair {
     event Approval(address indexed owner, address indexed spender, uint value);
     event Transfer(address indexed from, address indexed to, uint value);
 
@@ -56,12 +57,13 @@ interface ICherryPair {
 }
 
 
-// File contracts/Swapper/cherryswap/libraries/SafeMath.sol
+// File contracts/Swapper/pancakeswap/libraries/SafeMath.sol
 
-pragma solidity >=0.6.6;
+pragma solidity >=0.6.12;
 
 // a library for performing overflow-safe math, courtesy of DappHub (https://github.com/dapphub/ds-math)
-library SafeMath {
+
+library SafeMathUniswap {
     function add(uint x, uint y) internal pure returns (uint z) {
         require((z = x + y) >= x, 'ds-math-add-overflow');
     }
@@ -76,17 +78,17 @@ library SafeMath {
 }
 
 
-// File contracts/Swapper/cherryswap/libraries/CherryLibrary.sol
+// File contracts/Swapper/pancakeswap/libraries/UniswapV2Library.sol
 
 pragma solidity >=0.5.0;
-library CherryLibrary {
-    using SafeMath for uint;
+library UniswapV2Library {
+    using SafeMathUniswap for uint;
 
     // returns sorted token addresses, used to handle return values from pairs sorted in this order
     function sortTokens(address tokenA, address tokenB) internal pure returns (address token0, address token1) {
-        require(tokenA != tokenB, 'CherryLibrary: IDENTICAL_ADDRESSES');
+        require(tokenA != tokenB, 'PancakeLibrary: IDENTICAL_ADDRESSES');
         (token0, token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-        require(token0 != address(0), 'CherryLibrary: ZERO_ADDRESS');
+        require(token0 != address(0), 'PancakeLibrary: ZERO_ADDRESS');
     }
 
     // calculates the CREATE2 address for a pair without making any external calls
@@ -96,50 +98,46 @@ library CherryLibrary {
                 hex'ff',
                 factory,
                 keccak256(abi.encodePacked(token0, token1)),
-                hex'e3ae0327539fda6ee87492b9ce166b7419808c231acd1fe54dd3fbf7754704f5' // init code hash
+                hex'00fb7f630766e6a796048ea87d01acd3068e8ff67d078148a3fa3f4a84f69bd5' // init code hash
             ))));
     }
 
     // fetches and sorts the reserves for a pair
     function getReserves(address factory, address tokenA, address tokenB) internal view returns (uint reserveA, uint reserveB) {
         (address token0,) = sortTokens(tokenA, tokenB);
-        pairFor(factory, tokenA, tokenB);
-        (uint reserve0, uint reserve1,) = ICherryPair(pairFor(factory, tokenA, tokenB)).getReserves();
+        (uint reserve0, uint reserve1,) = IUniswapV2Pair(pairFor(factory, tokenA, tokenB)).getReserves();
         (reserveA, reserveB) = tokenA == token0 ? (reserve0, reserve1) : (reserve1, reserve0);
     }
 
-    // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
+    // // given some amount of an asset and pair reserves, returns an equivalent amount of the other asset
     function quote(uint amountA, uint reserveA, uint reserveB) internal pure returns (uint amountB) {
-        require(amountA > 0, 'CherryLibrary: INSUFFICIENT_AMOUNT');
-        require(reserveA > 0 && reserveB > 0, 'CherryLibrary: INSUFFICIENT_LIQUIDITY');
+        require(amountA > 0, 'UniswapV2Library: INSUFFICIENT_AMOUNT');
+        require(reserveA > 0 && reserveB > 0, 'UniswapV2Library: INSUFFICIENT_LIQUIDITY');
         amountB = amountA.mul(reserveB) / reserveA;
     }
 
+    // // given an input amount of an asset and pair reserves, returns the maximum output amount of the other asset
     function getAmountOut(uint amountIn, uint reserveIn, uint reserveOut) internal pure returns (uint amountOut) {
-        require(amountIn > 0, 'CherryLibrary: INSUFFICIENT_INPUT_AMOUNT');
-        require(reserveIn > 0 && reserveOut > 0, 'CherryLibrary: INSUFFICIENT_LIQUIDITY');
-
-        uint amountInWithFee = amountIn.mul(997);
+        require(amountIn > 0, 'UniswapV2Library: INSUFFICIENT_INPUT_AMOUNT');
+        require(reserveIn > 0 && reserveOut > 0, 'UniswapV2Library: INSUFFICIENT_LIQUIDITY');
+        uint amountInWithFee = amountIn.mul(9975);
         uint numerator = amountInWithFee.mul(reserveOut);
-        uint denominator = reserveIn.mul(1000).add(amountInWithFee);
-
+        uint denominator = reserveIn.mul(10000).add(amountInWithFee);
         amountOut = numerator / denominator;
     }
 
     // given an output amount of an asset and pair reserves, returns a required input amount of the other asset
     function getAmountIn(uint amountOut, uint reserveIn, uint reserveOut) internal pure returns (uint amountIn) {
-        require(amountOut > 0, 'CherryLibrary: INSUFFICIENT_OUTPUT_AMOUNT');
-        require(reserveIn > 0 && reserveOut > 0, 'CherryLibrary: INSUFFICIENT_LIQUIDITY');
-
-        uint numerator = reserveIn.mul(amountOut).mul(1000);
-        uint denominator = reserveOut.sub(amountOut).mul(997);
-
+        require(amountOut > 0, 'PancakeLibrary: INSUFFICIENT_OUTPUT_AMOUNT');
+        require(reserveIn > 0 && reserveOut > 0, 'PancakeLibrary: INSUFFICIENT_LIQUIDITY');
+        uint numerator = reserveIn.mul(amountOut).mul(10000);
+        uint denominator = reserveOut.sub(amountOut).mul(9975);
         amountIn = (numerator / denominator).add(1);
     }
 
-    // performs chained getAmountOut calculations on any number of pairs
+    // // performs chained getAmountOut calculations on any number of pairs
     function getAmountsOut(address factory, uint amountIn, address[] memory path) internal view returns (uint[] memory amounts) {
-        require(path.length >= 2, 'CherryLibrary: INVALID_PATH');
+        require(path.length >= 2, 'UniswapV2Library: INVALID_PATH');
         amounts = new uint[](path.length);
         amounts[0] = amountIn;
         for (uint i; i < path.length - 1; i++) {
@@ -150,7 +148,7 @@ library CherryLibrary {
 
     // performs chained getAmountIn calculations on any number of pairs
     function getAmountsIn(address factory, uint amountOut, address[] memory path) internal view returns (uint[] memory amounts) {
-        require(path.length >= 2, 'CherryLibrary: INVALID_PATH');
+        require(path.length >= 2, 'PancakeLibrary: INVALID_PATH');
         amounts = new uint[](path.length);
         amounts[amounts.length - 1] = amountOut;
         for (uint i = path.length - 1; i > 0; i--) {
@@ -162,8 +160,6 @@ library CherryLibrary {
 
 
 // File @openzeppelin/contracts/utils/Context.sol@v3.4.2
-
-// SPDX-License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -258,23 +254,29 @@ abstract contract Ownable is Context {
 }
 
 
-// File contracts/Swapper/CherrySwapper.sol
+// File contracts/Swapper/PancakeSwapper.sol
 
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
-contract CherrySwapper is Ownable {
+contract PancakeSwapper is Ownable {
     // factory address for AMM dex, normally we use spookyswap on fantom chain.
     address public factory;
-    address public constant WOKT = 0x8F8526dbfd6E38E3D8307702cA8469Bae6C56C15;
-    address public constant USDT = 0x382bB369d343125BfB2117af9c149795C6C65C50;
+    address public constant WBNB = 0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c;
+    address public constant BUSD = 0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56;
     mapping(address => bool) public tokenList;
-    address public constant OKSE = 0xA844C05ae51DdafA6c4d5c801DE1Ef5E6F626bEC;
+    address public constant OKSE = 0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875;
+    address public constant SHIB = 0x2859e4544C4bB03966803b044A93563Bd2D0DD4D;
+    address public constant VOLT = 0x7db5af2B9624e1b3B4Bb69D6DeBd9aD1016A58Ac;
+    address public constant ARV = 0x6679eB24F59dFe111864AEc72B443d1Da666B360;
     event TokenEnableUpdaated(address tokenAddr, bool bEnable);
 
     constructor(address _factory) {
         factory = _factory;
         _setTokenEnable(OKSE, true);
+        _setTokenEnable(SHIB, true);
+        _setTokenEnable(VOLT, true);
+        _setTokenEnable(ARV, true);
     }
 
     // **** SWAP ****
@@ -287,20 +289,16 @@ contract CherrySwapper is Ownable {
     ) external {
         for (uint256 i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
-            (address token0, ) = CherryLibrary.sortTokens(input, output);
+            (address token0, ) = UniswapV2Library.sortTokens(input, output);
             uint256 amountOut = amounts[i + 1];
             (uint256 amount0Out, uint256 amount1Out) = input == token0
                 ? (uint256(0), amountOut)
                 : (amountOut, uint256(0));
             address to = i < path.length - 2
-                ? CherryLibrary.pairFor(factory, output, path[i + 2])
+                ? UniswapV2Library.pairFor(factory, output, path[i + 2])
                 : _to;
-            ICherryPair(CherryLibrary.pairFor(factory, input, output)).swap(
-                amount0Out,
-                amount1Out,
-                to,
-                new bytes(0)
-            );
+            IUniswapV2Pair(UniswapV2Library.pairFor(factory, input, output))
+                .swap(amount0Out, amount1Out, to, new bytes(0));
         }
     }
 
@@ -309,7 +307,7 @@ contract CherrySwapper is Ownable {
         view
         returns (uint256[] memory amounts)
     {
-        return CherryLibrary.getAmountsIn(factory, amountOut, path);
+        return UniswapV2Library.getAmountsIn(factory, amountOut, path);
     }
 
     function getAmountsOut(uint256 amountIn, address[] memory path)
@@ -317,7 +315,7 @@ contract CherrySwapper is Ownable {
         view
         returns (uint256[] memory amounts)
     {
-        return CherryLibrary.getAmountsOut(factory, amountIn, path);
+        return UniswapV2Library.getAmountsOut(factory, amountIn, path);
     }
 
     function GetReceiverAddress(address[] memory path)
@@ -325,7 +323,7 @@ contract CherrySwapper is Ownable {
         view
         returns (address)
     {
-        return CherryLibrary.pairFor(factory, path[0], path[1]);
+        return UniswapV2Library.pairFor(factory, path[0], path[1]);
     }
 
     function getOptimumPath(address token0, address token1)
@@ -333,11 +331,11 @@ contract CherrySwapper is Ownable {
         view
         returns (address[] memory path)
     {
-        if (tokenList[token0] && token1 == USDT) {
+        if (tokenList[token0] && token1 == BUSD) {
             path = new address[](3);
             path[0] = token0;
-            path[1] = WOKT;
-            path[2] = USDT;
+            path[1] = WBNB;
+            path[2] = BUSD;
         } else {
             path = new address[](2);
             path[0] = token0;

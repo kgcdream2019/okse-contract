@@ -1,24 +1,24 @@
-yarn flatten contracts/OkseCard.sol > flattened/OkseCard.sol
-yarn flatten contracts/OkseCardPriceOracle.sol > flattened/OkseCardPriceOracle.sol
-yarn flatten contracts/LevelManager.sol > flattened/LevelManager.sol
-yarn flatten contracts/LimitManager.sol > flattened/LimitManager.sol
-yarn flatten contracts/MarketManager.sol > flattened/MarketManager.sol
-yarn flatten contracts/CashBackManager.sol > flattened/CashBackManager.sol
-yarn flatten contracts/Converter.sol > flattened/Converter.sol
+npx hardhat flatten contracts/OkseCard.sol > flattened/OkseCard.sol
+npx hardhat flatten contracts/OkseCardPriceOracle.sol > flattened/OkseCardPriceOracle.sol
+npx hardhat flatten contracts/LevelManager.sol > flattened/LevelManager.sol
+npx hardhat flatten contracts/LimitManager.sol > flattened/LimitManager.sol
+npx hardhat flatten contracts/MarketManager.sol > flattened/MarketManager.sol
+npx hardhat flatten contracts/CashBackManager.sol > flattened/CashBackManager.sol
+npx hardhat flatten contracts/Converter.sol > flattened/Converter.sol
 
-yarn flatten contracts/Swapper/CherrySwapper.sol > flattened/CherrySwapper.sol
-yarn flatten contracts/Swapper/PancakeSwapper.sol > flattened/PancakeSwapper.sol
-yarn flatten contracts/Swapper/QuickSwapper.sol > flattened/QuickSwapper.sol
-yarn flatten contracts/Swapper/SpookySwapper.sol > flattened/SpookySwapper.sol
-yarn flatten contracts/Swapper/SushiSwapper.sol > flattened/SushiSwapper.sol
-yarn flatten contracts/Swapper/TraderJoeSwapper.sol > flattened/TraderJoeSwapper.sol
+npx hardhat flatten contracts/Swapper/CherrySwapper.sol > flattened/CherrySwapper.sol
+npx hardhat flatten contracts/Swapper/PancakeSwapper.sol > flattened/PancakeSwapper.sol
+npx hardhat flatten contracts/Swapper/QuickSwapper.sol > flattened/QuickSwapper.sol
+npx hardhat flatten contracts/Swapper/SpookySwapper.sol > flattened/SpookySwapper.sol
+npx hardhat flatten contracts/Swapper/SushiSwapper.sol > flattened/SushiSwapper.sol
+npx hardhat flatten contracts/Swapper/TraderJoeSwapper.sol > flattened/TraderJoeSwapper.sol
 
-yarn flatten contracts/CustomPriceFeed/TWAPPriceFeed.sol > flattened/TWAPPriceFeed.sol
-yarn flatten contracts/CustomPriceFeed/TWAPPriceFeed2.sol > flattened/TWAPPriceFeed2.sol
-yarn flatten contracts/CustomPriceFeed/TWAPPriceFeedManager.sol > flattened/TWAPPriceFeedManager.sol
+npx hardhat flatten contracts/CustomPriceFeed/TWAPPriceFeed.sol > flattened/TWAPPriceFeed.sol
+npx hardhat flatten contracts/CustomPriceFeed/TWAPPriceFeed2.sol > flattened/TWAPPriceFeed2.sol
+npx hardhat flatten contracts/CustomPriceFeed/TWAPPriceFeedManager.sol > flattened/TWAPPriceFeedManager.sol
 
-yarn flatten contracts/secondary/SinkCharger.sol > flattened/SinkCharger.sol
-yarn flatten contracts/secondary/StableCoinConverter.sol > flattened/StableCoinConverter.sol
+npx hardhat flatten contracts/secondary/SinkCharger.sol > flattened/SinkCharger.sol
+npx hardhat flatten contracts/secondary/StableCoinConverter.sol > flattened/StableCoinConverter.sol
 
 
 

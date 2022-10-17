@@ -1,3 +1,4 @@
+// Sources flattened with hardhat v2.9.6 https://hardhat.org
 
 // File contracts/libraries/SafeMath.sol
 
