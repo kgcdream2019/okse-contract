@@ -1,0 +1,38 @@
+deployed contracts
+levelmanager  fantom  0x4cf6BB5F07966a53BB08a153e1843832c0747639
+levelmanager  bscmainnet  0xfA3E7d864cf426381aF1A990FD2E19d56b03dF33
+levelmanager  avaxc  0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+levelmanager  okex  0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+
+
+1) Fantom OkseCard setContractAddress   0x08B1fC2B48e5871354AF138B7909E9d1a04A89DD
+            address _priceOracle,       0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875
+            address _swapper,           0x75A35B5216cbEfE2AF2b3E868bb979A482c90f78
+            address _limitManager,      0x4cf6BB5F07966a53BB08a153e1843832c0747639
+            address _levelManager,      0x22CAe3f82c6b8AAA2457175fD6A788aA2940bEe6
+            address _marketManager,     0xC71438f3b31D133ff79F5Ad3ff5C0C0aF9AA4835
+            address _cashbackManager    0xe2DE49356D55bBC1D56AA57099FFdbE1868B427A
+
+2) bscmainnet OkseCard setContractAddress   0x40F5a9Bfd79585FFe39E93Efed59b84D27d6d593
+            address _priceOracle,           0x515695578eECd92d7747897df7756967912E678a
+            address _swapper,               0xde91e495d0b79f74e9cAc6c2bdcf2c07d9Aba74D
+            address _limitManager,          0xfA3E7d864cf426381aF1A990FD2E19d56b03dF33
+            address _levelManager,          0x33d38A7E5552271768267d144B4315f451971dd6
+            address _marketManager,         0x4fc6321F218C1eb8E959F97bD6F918AC738e7f7c
+            address _cashbackManager        0x0c123aE1cDaFbD71f9Bf8966c19081E47115b115
+
+3) avaxc OkseCard setContractAddress    0xe47C751c72EF1d2723e021F8153567Bd3e076a70
+            address _priceOracle,       0x4141c9420DF74d2379c1D3CD983a8c306Aa1A6b4
+            address _swapper,           0x451Dc7f50f4c89e9E3356515994a8024Ac792A8e
+            address _limitManager,      0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+            address _levelManager,      0xB1152Aaf71c44a8292d550c8c077D6Fc998D9CB9
+            address _marketManager,     0x30342EBb1fa044A9BBFd4256973B5f551e654103
+            address _cashbackManager    0x4fc6321F218C1eb8E959F97bD6F918AC738e7f7c
+
+4) okex OkseCard setContractAddress     0xC6ff41994413fFc01b25c47BCdDf7c9D277d6059
+            address _priceOracle,       0xff2a9c67993f37a8F7793EA286bFFDc57521a187
+            address _swapper,           0xb2c4A6b8febDCD4D56c402D7677AD5f62d36a557
+            address _limitManager,      0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+            address _levelManager,      0x22CAe3f82c6b8AAA2457175fD6A788aA2940bEe6
+            address _marketManager,     0x3CE2AFD4dA06a09F8b4c5715Ff74E83EAC3633d0
+            address _cashbackManager    0xB1152Aaf71c44a8292d550c8c077D6Fc998D9CB9
