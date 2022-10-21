@@ -60,6 +60,7 @@
     "typescript": "^3.7.3"
   },
   "dependencies": {
-    "@truffle/hdwallet-provider": "^2.0.15"
+    "@truffle/hdwallet-provider": "^2.0.15",
+    "@uniswap/v3-periphery": "^1.4.2"
   }
 }

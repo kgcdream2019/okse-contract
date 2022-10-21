@@ -12,10 +12,13 @@ npx hardhat flatten contracts/Swapper/QuickSwapper.sol > flattened/QuickSwapper.
 npx hardhat flatten contracts/Swapper/SpookySwapper.sol > flattened/SpookySwapper.sol
 npx hardhat flatten contracts/Swapper/SushiSwapper.sol > flattened/SushiSwapper.sol
 npx hardhat flatten contracts/Swapper/TraderJoeSwapper.sol > flattened/TraderJoeSwapper.sol
+npx hardhat flatten contracts/Swapper/UniswapV3Swapper.sol > flattened/UniswapV3Swapper.sol
 
 npx hardhat flatten contracts/CustomPriceFeed/TWAPPriceFeed.sol > flattened/TWAPPriceFeed.sol
 npx hardhat flatten contracts/CustomPriceFeed/TWAPPriceFeed2.sol > flattened/TWAPPriceFeed2.sol
 npx hardhat flatten contracts/CustomPriceFeed/TWAPPriceFeedManager.sol > flattened/TWAPPriceFeedManager.sol
+
+npx hardhat flatten contracts/CustomPriceFeed/UniswapV3TwapPriceFeed.sol > flattened/UniswapV3TwapPriceFeed.sol
 
 npx hardhat flatten contracts/secondary/SinkCharger.sol > flattened/SinkCharger.sol
 npx hardhat flatten contracts/secondary/StableCoinConverter.sol > flattened/StableCoinConverter.sol

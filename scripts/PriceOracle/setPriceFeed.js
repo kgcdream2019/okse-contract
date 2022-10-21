@@ -16,6 +16,9 @@ async function main() {
     else if (network.name === "okex") {
         contractAddress = "0xff2a9c67993f37a8F7793EA286bFFDc57521a187";
     }
+    else if (network.name === "arbitrum") {
+        contractAddress = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7";
+    }
     const multiSigContract = await ethers.getContractAt("OkseCardPriceOracle", contractAddress);
     let asset;
     let priceFeed;
@@ -51,6 +54,9 @@ async function main() {
         
         asset = "0xbA2aE424d960c26247Dd6c32edC70B295c744C43"; // DOGE
         priceFeed = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7"; // TwapPriceFeed2
+
+        asset = "0x23396cF899Ca06c4472205fC903bDB4de249D6fC"; // USTC
+        priceFeed = "0x33fb5277D65Eaf00c88bA279e502805f5ac8bb88"; // TwapPriceFeed
 
     }
     else if (network.name === "fantom") {
@@ -104,8 +110,19 @@ async function main() {
         priceFeed = "0xde91e495d0b79f74e9cAc6c2bdcf2c07d9Aba74D";
         
     }
+    else if(network.name === "arbitrum"){
+        chainId = 42161;
+        const WETH = "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"; //WETH
+        const USDC = "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"; // USDC
+        const okse = "0x4313DDa7bc940F3f2B2ddDACF568300165C878CA";  // OKSE 
+        asset = WETH
+        priceFeed = "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612";
+        asset = USDC
+        priceFeed = "0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3";
 
-    let signData = getSignData("setPriceFeed", 32, ["address", "address"], [asset, priceFeed])
+        
+    }
+    let signData = getSignData("setPriceFeed", 34, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     await multiSigContract.setPriceFeed(signData, keys);

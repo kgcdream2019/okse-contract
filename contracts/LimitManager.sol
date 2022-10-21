@@ -32,12 +32,12 @@ contract LimitManager is MultiSigOwner, Manager {
         Manager(_cardContract)
     {
         DailyLimits = [
-            100 ether,
             250 ether,
             500 ether,
             2500 ether,
             5000 ether,
-            10000 ether
+            10000 ether,
+            50000 ether
         ];
         levelManager = _levelManager;
         timeDiff = 4 hours;

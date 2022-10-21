@@ -285,7 +285,6 @@ contract Manager {
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
-pragma abicoder v2;
 contract CashBackManager is MultiSigOwner, Manager {
     uint256 public constant MAX_LEVEL = 5;
     // Setting for cashback enable or disable

@@ -5,7 +5,7 @@ async function main() {
     const [deployer] = await ethers.getSigners();
     let chainId;
     if (network.name === "bscmainnet") {
-        contractAddress = "0x9666657d324F866DA07E418C91628Fd399088f37";
+        contractAddress = "0xfA3E7d864cf426381aF1A990FD2E19d56b03dF33";
         chainId = 56;
     }
     else if (network.name === "fantom") {
@@ -23,7 +23,7 @@ async function main() {
     // const oldOwner = "0x0Ed78A9DE439d4aA69596402A0947819655d3c05"
     let newOwner = "0x3Cdf6195e83a61e9D1842c70707e7B2fe10D2793"
 
-    let signData = getSignData("transferOwnership", 7, ["address"], [newOwner])
+    let signData = getSignData("transferOwnership", 8, ["address"], [newOwner])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     await multiSigContract.transferOwnership(signData, keys);

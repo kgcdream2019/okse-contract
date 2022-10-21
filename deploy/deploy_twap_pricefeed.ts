@@ -20,7 +20,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   else if(network.name === "bscmainnet"){
     const USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // BUSD
-    const pancakeswapRouter = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // spookyswap router
+    const pancakeswapRouter = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // pancakeswap router
     // const TOR = "0x1d6cbdc6b29c6afbae65444a1f65ba9252b8ca83";
     // const TorPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
     //   from: deployer,
@@ -33,10 +33,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     //   args: [HAY, USDT, pancakeswapRouter],
     //   log: true,
     // });
-    const WOM = "0xAD6742A35fB341A9Cc6ad674738Dd8da98b94Fb1";
-    const WomPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
+    // const WOM = "0xAD6742A35fB341A9Cc6ad674738Dd8da98b94Fb1";
+    // const WomPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
+    //   from: deployer,
+    //   args: [WOM, USDT, pancakeswapRouter],
+    //   log: true,
+    // });
+
+    const USTC = "0x23396cF899Ca06c4472205fC903bDB4de249D6fC";
+    const USTCPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
       from: deployer,
-      args: [WOM, USDT, pancakeswapRouter],
+      args: [USTC, USDT, pancakeswapRouter],
       log: true,
     });
     

@@ -139,7 +139,6 @@ contract MultiSigOwner {
 
 // File contracts/Manager.sol
 
-
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
@@ -371,12 +370,12 @@ contract LimitManager is MultiSigOwner, Manager {
         Manager(_cardContract)
     {
         DailyLimits = [
-            100 ether,
             250 ether,
             500 ether,
             2500 ether,
             5000 ether,
-            10000 ether
+            10000 ether,
+            50000 ether
         ];
         levelManager = _levelManager;
         timeDiff = 4 hours;

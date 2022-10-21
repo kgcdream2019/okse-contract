@@ -30,7 +30,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   let _owners = [
     "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b",
     "0xC533335b07e4E6B79763AAa65D45AF2c0606a016",
-    "0x3Cdf6195e83a61e9D1842c70707e7B2fe10D2793",
+    "0x3Cdf6195e83a61e9D1842c70707e7B2fe10D2793"
   ];
   let _ownersForPriceOracle = [
     "0xba6BA085F0B6BE8f8A2D0f5a4F450c407fDC5aa4",
@@ -57,8 +57,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   let swapper: any;
   if (network.name === "fantom") {
     _WETH = "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83"; // WMATIC
-    USDT = "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75";  // USDC
-    okse = "0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88";  // OKSE
+    USDT = "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75"; // USDC
+    okse = "0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88"; // OKSE
     factory = "0x152eE697f2E276fA89E96742e9bB9aB1F2E61bE3"; // spookyswap factory
     swapper = await deploy("SpookySwapper", {
       from: deployer,
@@ -68,8 +68,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   if (network.name === "bscmainnet") {
     _WETH = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"; // WBNB
-    USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56";  // BUSD
-    okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875";  // OKSE / SPIRIT
+    USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // BUSD
+    okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE / SPIRIT
     factory = "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"; // pancakeswap factory
     swapper = await deploy("PancakeSwapper", {
       from: deployer,
@@ -79,8 +79,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   if (network.name === "avaxc") {
     _WETH = "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"; // WAVAX
-    USDT = "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E";  // USDC
-    okse = "0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87";  // OKSE
+    USDT = "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"; // USDC
+    okse = "0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87"; // OKSE
     factory = "0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10"; // traderjoe factory
     swapper = await deploy("TraderJoeSwapper", {
       from: deployer,
@@ -90,12 +90,23 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   if (network.name === "okex") {
     _WETH = "0x8f8526dbfd6e38e3d8307702ca8469bae6c56c15"; // WOKT
-    USDT = "0x382bb369d343125bfb2117af9c149795c6c65c50";  // USDT
-    okse = "0xA844C05ae51DdafA6c4d5c801DE1Ef5E6F626bEC";  // OKSE 
+    USDT = "0x382bb369d343125bfb2117af9c149795c6c65c50"; // USDT
+    okse = "0xA844C05ae51DdafA6c4d5c801DE1Ef5E6F626bEC"; // OKSE
     factory = "0x709102921812B3276A65092Fe79eDfc76c4D4AFe"; // cherryswap factory
     swapper = await deploy("CherrySwapper", {
       from: deployer,
       args: [factory],
+      log: true,
+    });
+  }
+  if (network.name === "arbitrum") {
+    _WETH = "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"; // WETH
+    USDT = "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"; // USDC
+    okse = "0x4313DDa7bc940F3f2B2ddDACF568300165C878CA"; // OKSE
+    const router = "0xE592427A0AEce92De3Edee1F18E0157C05861564"; // uniswap v3 abitrum router
+    swapper = await deploy("UniswapV3Swapper", {
+      from: deployer,
+      args: [router, oksecardPriceOracle.address, _WETH, USDT],
       log: true,
     });
   }
@@ -194,7 +205,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const financialAddress = "0x700B4A3F6bf15D7E31a87fBFB1A4bBba9Bf8EB87";
   const masterAddress = "0xCe75aaeEfef7b14cE7156d800B291b195559d07c";
   const treasuryAddress = "0xf57F68e6bc75979feB128C1A2061EeD60695f190";
-  const governorAddress = "0xCBd4e556fC24C83159DEfD1D1BBAd66Fd7d2C75c";
+  // const governorAddress = "0xCBd4e556fC24C83159DEfD1D1BBAd66Fd7d2C75c";
+  const governorAddress = "0x24Bd16b990F3A376712f4FCE6C5fCB05A3db3745";
   const monthlyfeeAddress = "0x7D2D43B0FB877a08ecBb8f95E01E9a70321C4c84";
   const stakeContractAddress = "0xf57F68e6bc75979feB128C1A2061EeD60695f190";
   try {

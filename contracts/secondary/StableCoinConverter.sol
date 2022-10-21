@@ -68,8 +68,8 @@ contract StableCoinConverter is Ownable {
         return ERC20Interface(token).balanceOf(address(this));
     }
 
-    function approve(address token, address target) external {
-        ERC20Interface(token).approve(target, UINT_MAX);
+    function approve(address _token, address target) external {
+        ERC20Interface(_token).approve(target, UINT_MAX);
     }
 
     function swap(uint256 amount) internal {

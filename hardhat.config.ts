@@ -96,6 +96,10 @@ export default {
       url: `https://exchainrpc.okex.org`,
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
+    arbitrum: {
+      url: `https://arb1.arbitrum.io/rpc`,
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
   },
   etherscan: {
     // Your API key for Etherscan
