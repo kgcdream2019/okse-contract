@@ -251,6 +251,11 @@ Daily limits
             TWAPPriceFeed2      0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7      
         add USTC token on bsc   0x23396cF899Ca06c4472205fC903bDB4de249D6fC
             TWAPPriceFeed       0x33fb5277D65Eaf00c88bA279e502805f5ac8bb88
+
+        add MCRT token on BSC
+            token address      0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f
+            TWAPPriceFeed2     0x7c3da197314eA6885F54FbF6Bee2A8e329fE88d1          
+
     -AVAXC
 
         TWAPPriceFeedManager        0x0aaBC7C5380E01Bd30e555aCa966d9C8A86751f5

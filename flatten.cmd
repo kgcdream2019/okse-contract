@@ -19,6 +19,7 @@ npx hardhat flatten contracts/CustomPriceFeed/TWAPPriceFeed2.sol > flattened/TWA
 npx hardhat flatten contracts/CustomPriceFeed/TWAPPriceFeedManager.sol > flattened/TWAPPriceFeedManager.sol
 
 npx hardhat flatten contracts/CustomPriceFeed/UniswapV3TwapPriceFeed.sol > flattened/UniswapV3TwapPriceFeed.sol
+npx hardhat flatten contracts/CustomPriceFeed/UniswapV3TwapPriceFeed2.sol > flattened/UniswapV3TwapPriceFeed2.sol
 
 npx hardhat flatten contracts/secondary/SinkCharger.sol > flattened/SinkCharger.sol
 npx hardhat flatten contracts/secondary/StableCoinConverter.sol > flattened/StableCoinConverter.sol

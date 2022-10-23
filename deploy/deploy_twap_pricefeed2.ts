@@ -79,10 +79,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     //   args: [LUNA, USDT, WETH, pancakeRouter],
     //   log: true,
     // });
-    const DOGE = "0xbA2aE424d960c26247Dd6c32edC70B295c744C43"; // DOGE
-    const DOGETPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    // const DOGE = "0xbA2aE424d960c26247Dd6c32edC70B295c744C43"; // DOGE
+    // const DOGETPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    //   from: deployer,
+    //   args: [DOGE, USDT, WETH, pancakeRouter],
+    //   log: true,
+    // });
+
+    const MCRT = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f"; // MCRT
+    const MCRTTPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
       from: deployer,
-      args: [DOGE, USDT, WETH, pancakeRouter],
+      args: [MCRT, USDT, WETH, pancakeRouter],
       log: true,
     });
   }
