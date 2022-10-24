@@ -1,0 +1,10 @@
+1. check swapping path : token-usd , token-eth-usd
+2. deploy TWAPPriceFeed, TWAPPriceFeed2
+    - check realtime price
+    - check twap price
+    - adjust test amount
+3. setPriceFeed in OkseCardPriceOracle
+4. setTokenEnable in Swapper contract for token who have token-eth-usd path
+5. addMarket using multi signature
+6. update backend
+7. check deposit, withdraw, setUserMaiMarket, topupPrepaidCard
