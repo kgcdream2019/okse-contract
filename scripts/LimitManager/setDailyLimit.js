@@ -34,7 +34,8 @@ async function main() {
     let signData = getSignData("setDailyLimit", index, ["uint256", "uint256"], [index, _amounts])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
-    await multiSigContract.setDailyLimit(signData, keys);
+    const tx = await multiSigContract.ssetDailyLimit(signData, keys);
+    console.log("--- tx = ", tx);
 }
 main()
     .then(() => process.exit(0))

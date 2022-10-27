@@ -10,7 +10,8 @@ async function main() {
     let signData = getSignData("setBatchDirectPrice", 15, ["address[]", "uint256[]"], [_assets, _prices])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, 250, signData);
     console.log(signData, keys);
-    await multiSigContract.setBatchDirectPrice(signData, keys);
+    const tx = await multiSigContract.ssetBatchDirectPrice(signData, keys);
+    console.log("--- tx = ", tx);
 }
 main()
     .then(() => process.exit(0))

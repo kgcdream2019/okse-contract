@@ -57,7 +57,8 @@ async function main() {
         [_priceOracle, _swapper, _limitManager, _levelManager, _marketManager, _cashbackManager])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
-    await multiSigContract.setContractAddress(signData, keys);
+    const tx = await multiSigContract.ssetContractAddress(signData, keys);
+    console.log("--- tx = ", tx);
 }
 main()
     .then(() => process.exit(0))

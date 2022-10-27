@@ -53,7 +53,8 @@ async function main() {
         [_monthlyFeeAmount, _okseMonthlyProfit, _withdrawFeePercent, newBuyFeePercent, newBuyTxFee])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
-    await multiSigContract.setFeeValues(signData, keys);
+    const tx = await multiSigContract.ssetFeeValues(signData, keys);
+    console.log("--- tx = ", tx);
 }
 main()
     .then(() => process.exit(0))

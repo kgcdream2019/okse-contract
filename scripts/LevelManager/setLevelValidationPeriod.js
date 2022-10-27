@@ -27,7 +27,8 @@ async function main() {
     let signData = getSignData("setLevelValidationPeriod", 10, ["uint256"], [levelValidationPeriod])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
-    await multiSigContract.setLevelValidationPeriod(signData, keys);
+    const tx = await multiSigContract.setLevelValidationPeriod(signData, keys);
+    console.log("--- tx = ", tx);
 }
 main()
     .then(() => process.exit(0))

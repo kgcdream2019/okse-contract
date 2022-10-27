@@ -61,6 +61,15 @@ async function main() {
         asset = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f"; // MCRT
         priceFeed = "0x7c3da197314eA6885F54FbF6Bee2A8e329fE88d1"; // TwapPriceFeed2
 
+        asset = "0x4b0f1812e5df2a09796481ff14017e6005508003"; // TWT
+        priceFeed = "0x31416EAbeF23DDB20700a342F4Dda310F3C38987"; // TwapPriceFeed2
+        
+        asset = "0x352Cb5E19b12FC216548a2677bD0fce83BaE434B"; // BTT
+        priceFeed = "0xCE9673477918e8faEcabF3d05a538f85a8329173"; // TwapPriceFeed
+
+        asset = "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B"; // TRX
+        priceFeed = "0xF4C5e535756D11994fCBB12Ba8adD0192D9b88be"; // ChainLink Feed
+
     }
     else if (network.name === "fantom") {
         chainId = 250;
@@ -125,10 +134,11 @@ async function main() {
 
         
     }
-    let signData = getSignData("setPriceFeed", 35, ["address", "address"], [asset, priceFeed])
+    let signData = getSignData("setPriceFeed", 38, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
-    await multiSigContract.setPriceFeed(signData, keys);
+    let tx = await multiSigContract.setPriceFeed(signData, keys);
+    console.log("--- tx = ", tx);
 }
 main()
     .then(() => process.exit(0))

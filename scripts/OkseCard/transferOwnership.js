@@ -30,7 +30,8 @@ async function main() {
     let signData = getSignData("transferOwnership", 3, ["address"], [newOwner])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
-    await multiSigContract.transferOwnership(signData, keys);
+    const tx = await multiSigContract.stransferOwnership(signData, keys);
+    console.log("--- tx = ", tx);
 }
 main()
     .then(() => process.exit(0))

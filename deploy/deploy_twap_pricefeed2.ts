@@ -47,8 +47,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (network.name === "bscmainnet") {
     const USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // BUSD
     // const okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE
-    const pancakeRouter = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // pancakeswap router
     const WETH = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c";
+    const pancakeRouter = "0x10ED43C718714eb63d5aA57B78B54704E256024E"; // pancakeswap router
+
     // const OksePriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
     //   from: deployer,
     //   args: [okse, USDT, WETH, pancakeRouter],
@@ -86,10 +87,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     //   log: true,
     // });
 
-    const MCRT = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f"; // MCRT
-    const MCRTTPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    // const MCRT = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f"; // MCRT
+    // const MCRTTPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    //   from: deployer,
+    //   args: [MCRT, USDT, WETH, pancakeRouter],
+    //   log: true,
+    // });
+    const TWT = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f"; // TWT
+    const TWTPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
       from: deployer,
-      args: [MCRT, USDT, WETH, pancakeRouter],
+      args: [TWT, USDT, WETH, pancakeRouter],
       log: true,
     });
   }

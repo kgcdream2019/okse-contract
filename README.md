@@ -248,13 +248,24 @@ Daily limits
         
         add DOGE token on bsc
             token address       0xbA2aE424d960c26247Dd6c32edC70B295c744C43      decimal 8
-            TWAPPriceFeed2      0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7      
+            TWAPPriceFeed2      0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+            chainlink pricefeed  0x3AB0A0d137D4F946fBB19eecc6e92E64660231C8     not set yet    
         add USTC token on bsc   0x23396cF899Ca06c4472205fC903bDB4de249D6fC
             TWAPPriceFeed       0x33fb5277D65Eaf00c88bA279e502805f5ac8bb88
 
         add MCRT token on BSC
             token address      0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f
-            TWAPPriceFeed2     0x7c3da197314eA6885F54FbF6Bee2A8e329fE88d1          
+            TWAPPriceFeed2     0x7c3da197314eA6885F54FbF6Bee2A8e329fE88d1
+
+        add TWT token on BSC
+            token address      0x4b0f1812e5df2a09796481ff14017e6005508003
+            TWAPPriceFeed2      0x31416EAbeF23DDB20700a342F4Dda310F3C38987  testAmount 10 ether
+        add BTT token on BSC
+            token address       0x352Cb5E19b12FC216548a2677bD0fce83BaE434B
+            TWAPPriceFeed       0xCE9673477918e8faEcabF3d05a538f85a8329173  testAmount 10000000 ether
+        add TRX token on BSC
+            token address       0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B
+            chainlink price feed  0xF4C5e535756D11994fCBB12Ba8adD0192D9b88be            
 
     -AVAXC
 

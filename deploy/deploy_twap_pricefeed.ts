@@ -40,10 +40,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     //   log: true,
     // });
 
-    const USTC = "0x23396cF899Ca06c4472205fC903bDB4de249D6fC";
-    const USTCPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
+    // const USTC = "0x23396cF899Ca06c4472205fC903bDB4de249D6fC";
+    // const USTCPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
+    //   from: deployer,
+    //   args: [USTC, USDT, pancakeswapRouter],
+    //   log: true,
+    // });
+    const BTT = "0x352Cb5E19b12FC216548a2677bD0fce83BaE434B";
+    const BTTPriceFeed_Implementation = await deploy("TWAPPriceFeed", {
       from: deployer,
-      args: [USTC, USDT, pancakeswapRouter],
+      args: [BTT, USDT, pancakeswapRouter],
       log: true,
     });
     

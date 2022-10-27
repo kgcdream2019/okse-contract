@@ -30,7 +30,8 @@ async function main() {
     let signData = getSignData("addMarket", 6, ["address"], [market])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
-    await multiSigContract.addMarket(signData, keys);
+    const tx = await multiSigContract.saddMarket(signData, keys);
+    console.log("--- tx = ", tx);
 }
 main()
     .then(() => process.exit(0))
