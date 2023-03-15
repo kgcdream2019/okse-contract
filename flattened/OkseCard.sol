@@ -979,6 +979,7 @@ abstract contract SignerRole is Context {
 
 // File contracts/OkseCard.sol
 
+
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
@@ -1216,8 +1217,12 @@ contract OkseCard is OwnerConstants, SignerRole {
 
     // verified
     function getUserExpired(address _userAddr) public view returns (bool) {
-        if (userValidTimes[_userAddr].add(25 days) > block.timestamp) {
+        // if monthly fee is zero then user never expired
+        if (monthlyFeeAmount == 0){
             return false;
+        }
+        if (userValidTimes[_userAddr].add(25 days) > block.timestamp) {
+                return false;
         }
         return true;
     }
@@ -1593,7 +1598,9 @@ contract OkseCard is OwnerConstants, SignerRole {
             priceOracle
         );
         assetAmountIn = assetAmountIn.add(
-            (assetAmountIn.mul(IMarketManager(marketManager).slippage())).div(10000)
+            (assetAmountIn.mul(IMarketManager(marketManager).slippage())).div(
+                10000
+            )
         );
         _amount = IConverter(converter).convertUsdAmountToAssetAmount(
             _amount,

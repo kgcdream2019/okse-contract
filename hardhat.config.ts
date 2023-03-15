@@ -76,7 +76,7 @@ export default {
       url: `https://bsc-dataseed.binance.org`,
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
-    matic: {
+    polygon: {
       url: `https://polygon-rpc.com/`,
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
@@ -98,6 +98,10 @@ export default {
     },
     arbitrum: {
       url: `https://arb1.arbitrum.io/rpc`,
+      accounts: [`${process.env.PRIVATE_KEY}`],
+    },
+    optimism: {
+      url: `https://mainnet.optimism.io`,
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
   },

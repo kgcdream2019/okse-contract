@@ -19,6 +19,9 @@ async function main() {
     else if (network.name === "arbitrum") {
         contractAddress = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7";
     }
+    else if (network.name === "optimism") {
+        contractAddress = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7";
+    }
     const multiSigContract = await ethers.getContractAt("OkseCardPriceOracle", contractAddress);
     let asset;
     let priceFeed;
@@ -41,34 +44,40 @@ async function main() {
         priceFeed = "0xeEEe4D6465d2D5A341340f5dcD7fD0c379056Fe6"; // TwapPriceFeed
 
         asset = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE
-        priceFeed = "0x166088f58ca5A527F9C39E287Ee154bC0746140d"; // TwapPriceFeed2
+        priceFeed = "0xCE5559AFAE07f96e54eA99B265A4b13b0cd75bcB"; // TwapPriceFeed
 
-        asset = "0x7db5af2B9624e1b3B4Bb69D6DeBd9aD1016A58Ac"; // VOLT
-        priceFeed = "0x536CEf7F539Ab4C71950d32b12a146bed7EDf084"; // TwapPriceFeed2
+        // asset = "0x7db5af2B9624e1b3B4Bb69D6DeBd9aD1016A58Ac"; // VOLT
+        // priceFeed = "0x536CEf7F539Ab4C71950d32b12a146bed7EDf084"; // TwapPriceFeed2
 
-        asset = "0x6679eB24F59dFe111864AEc72B443d1Da666B360"; // ARV
-        priceFeed = "0x750632A9a95bf557da96203219d9aE2C98Cd0A96"; // TwapPriceFeed2
+        // asset = "0x6679eB24F59dFe111864AEc72B443d1Da666B360"; // ARV
+        // priceFeed = "0x750632A9a95bf557da96203219d9aE2C98Cd0A96"; // TwapPriceFeed2
 
-        asset = "0x156ab3346823B651294766e23e6Cf87254d68962"; // LUNA
-        priceFeed = "0xe2185a1ebB2303DE5B9A9776365538fcDD0D7525"; // TwapPriceFeed2
+        // asset = "0x156ab3346823B651294766e23e6Cf87254d68962"; // LUNA
+        // priceFeed = "0xe2185a1ebB2303DE5B9A9776365538fcDD0D7525"; // TwapPriceFeed2
         
-        asset = "0xbA2aE424d960c26247Dd6c32edC70B295c744C43"; // DOGE
-        priceFeed = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7"; // TwapPriceFeed2
+        // asset = "0xbA2aE424d960c26247Dd6c32edC70B295c744C43"; // DOGE
+        // priceFeed = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7"; // TwapPriceFeed2
 
-        asset = "0x23396cF899Ca06c4472205fC903bDB4de249D6fC"; // USTC
-        priceFeed = "0x33fb5277D65Eaf00c88bA279e502805f5ac8bb88"; // TwapPriceFeed
+        // asset = "0x23396cF899Ca06c4472205fC903bDB4de249D6fC"; // USTC
+        // priceFeed = "0x33fb5277D65Eaf00c88bA279e502805f5ac8bb88"; // TwapPriceFeed
 
-        asset = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f"; // MCRT
-        priceFeed = "0x7c3da197314eA6885F54FbF6Bee2A8e329fE88d1"; // TwapPriceFeed2
+        // asset = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f"; // MCRT
+        // priceFeed = "0x7c3da197314eA6885F54FbF6Bee2A8e329fE88d1"; // TwapPriceFeed2
 
-        asset = "0x4b0f1812e5df2a09796481ff14017e6005508003"; // TWT
-        priceFeed = "0x31416EAbeF23DDB20700a342F4Dda310F3C38987"; // TwapPriceFeed2
+        // asset = "0x4b0f1812e5df2a09796481ff14017e6005508003"; // TWT
+        // priceFeed = "0x31416EAbeF23DDB20700a342F4Dda310F3C38987"; // TwapPriceFeed2
         
-        asset = "0x352Cb5E19b12FC216548a2677bD0fce83BaE434B"; // BTT
-        priceFeed = "0xCE9673477918e8faEcabF3d05a538f85a8329173"; // TwapPriceFeed
+        // asset = "0x352Cb5E19b12FC216548a2677bD0fce83BaE434B"; // BTT
+        // priceFeed = "0xCE9673477918e8faEcabF3d05a538f85a8329173"; // TwapPriceFeed
 
-        asset = "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B"; // TRX
-        priceFeed = "0xF4C5e535756D11994fCBB12Ba8adD0192D9b88be"; // ChainLink Feed
+        // asset = "0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B"; // TRX
+        // priceFeed = "0xF4C5e535756D11994fCBB12Ba8adD0192D9b88be"; // ChainLink Feed
+
+        // asset = "0xfb5b838b6cfeedc2873ab27866079ac55363d37e"; // FLOKI
+        // priceFeed = "0x37140CCB0086D580128CE9c530dB4E565Feea805"; // TwapPriceFeed2
+
+        // asset = "0x8fff93e810a2edaafc326edee51071da9d398e83"; // BRISE
+        // priceFeed = "0x3238a6DE06cf949897CA580AdB82AA6aa6d300cD"; // TwapPriceFeed2
 
     }
     else if (network.name === "fantom") {
@@ -131,10 +140,18 @@ async function main() {
         priceFeed = "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612";
         asset = USDC
         priceFeed = "0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3";
-
-        
     }
-    let signData = getSignData("setPriceFeed", 38, ["address", "address"], [asset, priceFeed])
+    else if(network.name === "optimism"){
+        chainId = 10;
+        const WETH = "0x4200000000000000000000000000000000000006"; //WETH
+        const USDC = "0x7F5c764cBc14f9669B88837ca1490cCa17c31607"; // USDC
+        const okse = "0x259479fBeb1CDe194afA297f36f4216e9C87728c";  // OKSE 
+        asset = WETH
+        priceFeed = "0x13e3Ee699D1909E989722E753853AE30b17e08c5";
+        asset = USDC
+        priceFeed = "0x16a9FA2FDa030272Ce99B29CF780dFA30361E0f3";
+    }
+    let signData = getSignData("setPriceFeed", 46, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     let tx = await multiSigContract.setPriceFeed(signData, keys);

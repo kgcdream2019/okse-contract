@@ -93,10 +93,22 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     //   args: [MCRT, USDT, WETH, pancakeRouter],
     //   log: true,
     // });
-    const TWT = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f"; // TWT
-    const TWTPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    // const TWT = "0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f"; // TWT
+    // const TWTPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    //   from: deployer,
+    //   args: [TWT, USDT, WETH, pancakeRouter],
+    //   log: true,
+    // });
+    // const FLOKI = "0xfb5b838b6cfeedc2873ab27866079ac55363d37e"; // FLOKI
+    // const FLOKIPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
+    //   from: deployer,
+    //   args: [FLOKI, USDT, WETH, pancakeRouter],
+    //   log: true,
+    // });
+    const BRISE = "0x8fff93e810a2edaafc326edee51071da9d398e83"; // BRISE
+    const BRISEPriceFeed_Implementation = await deploy("TWAPPriceFeed2", {
       from: deployer,
-      args: [TWT, USDT, WETH, pancakeRouter],
+      args: [BRISE, USDT, WETH, pancakeRouter],
       log: true,
     });
   }

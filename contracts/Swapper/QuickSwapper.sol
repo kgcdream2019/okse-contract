@@ -5,10 +5,15 @@
 pragma solidity ^0.7.0;
 import "./quickswap/interfaces/IUniswapV2Pair.sol";
 import "./quickswap/libraries/UniswapV2Library.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract QuickSwapper {
+contract QuickSwapper is Ownable {
     // factory address for AMM dex, normally we use spookyswap on fantom chain.
     address public factory;
+    address public constant WMATIC = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270;
+    address public constant USDC = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174;
+    mapping(address => bool) public tokenList;
+    event TokenEnableUpdaated(address tokenAddr, bool bEnable);
 
     constructor(address _factory) {
         factory = _factory;
@@ -66,8 +71,27 @@ contract QuickSwapper {
         view
         returns (address[] memory path)
     {
-        path = new address[](2);
-        path[0] = token0;
-        path[1] = token1;
+        if (tokenList[token0] && token1 == USDC) {
+            path = new address[](3);
+            path[0] = token0;
+            path[1] = WMATIC;
+            path[2] = USDC;
+        } else {
+            path = new address[](2);
+            path[0] = token0;
+            path[1] = token1;
+        }
+    }
+
+    function _setTokenEnable(address tokenAddr, bool bEnable) internal {
+        tokenList[tokenAddr] = bEnable;
+        emit TokenEnableUpdaated(tokenAddr, bEnable);
+    }
+
+    function setTokenEnable(address tokenAddr, bool bEnable)
+        external
+        onlyOwner
+    {
+        _setTokenEnable(tokenAddr, bEnable);
     }
 }

@@ -22,7 +22,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       log: true,
     });
   }
-  if (network.name === "matic") {
+  if (network.name === "polygon") {
     const factory = "0xc35DADB65012eC5796536bD9864eD8773aBc74C4"; // sushiswap factory
     const SushiSwapper = await deploy("SushiSwapper", {
       from: deployer,
