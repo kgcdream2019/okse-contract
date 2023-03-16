@@ -314,7 +314,6 @@ contract Manager {
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
-pragma abicoder v2;
 contract MarketManager is MultiSigOwner, Manager {
     // default market , which is used when user didn't select any market for his main market
     address public defaultMarket;

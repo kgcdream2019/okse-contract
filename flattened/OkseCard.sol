@@ -1097,9 +1097,10 @@ contract OkseCard is OwnerConstants, SignerRole {
      * The `constructor` is executed only once when the contract is created.
      * The `public` modifier makes a function callable from outside the contract.
      */
-    constructor(address _converter, address _initialSigner)
-        SignerRole(_initialSigner)
-    {
+    constructor(
+        address _converter,
+        address _initialSigner
+    ) SignerRole(_initialSigner) {
         converter = _converter;
         // The totalSupply is assigned to transaction sender, which is the account
         // that is deploying the contract.
@@ -1207,22 +1208,20 @@ contract OkseCard is OwnerConstants, SignerRole {
         _;
     }
 
-    function getUserOkseBalance(address userAddr)
-        external
-        view
-        returns (uint256)
-    {
+    function getUserOkseBalance(
+        address userAddr
+    ) external view returns (uint256) {
         return usersBalances[userAddr][IMarketManager(marketManager).OKSE()];
     }
 
     // verified
     function getUserExpired(address _userAddr) public view returns (bool) {
         // if monthly fee is zero then user never expired
-        if (monthlyFeeAmount == 0){
+        if (monthlyFeeAmount == 0) {
             return false;
         }
         if (userValidTimes[_userAddr].add(25 days) > block.timestamp) {
-                return false;
+            return false;
         }
         return true;
     }
@@ -1235,10 +1234,10 @@ contract OkseCard is OwnerConstants, SignerRole {
     }
 
     // verified
-    function updateSigner(address _signer, bool bAddOrRemove)
-        public
-        onlyGovernor
-    {
+    function updateSigner(
+        address _signer,
+        bool bAddOrRemove
+    ) public onlyGovernor {
         if (bAddOrRemove) {
             _addSigner(_signer);
         } else {
@@ -1263,12 +1262,10 @@ contract OkseCard is OwnerConstants, SignerRole {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // newly verified
-    function deposit(address market, uint256 amount)
-        public
-        marketEnabled(market)
-        nonReentrant
-        noEmergency
-    {
+    function deposit(
+        address market,
+        uint256 amount
+    ) public marketEnabled(market) nonReentrant noEmergency {
         TransferHelper.safeTransferFrom(
             market,
             msg.sender,
@@ -1498,7 +1495,10 @@ contract OkseCard is OwnerConstants, SignerRole {
 
     // decimal of usdAmount is 18
     // newly verified
-    function buyGoods(SignData calldata _data, SignKeys[2] calldata signer_key)
+    function buyGoods(
+        SignData calldata _data,
+        SignKeys[2] calldata signer_key
+    )
         external
         nonReentrant
         marketEnabled(_data.market)
@@ -1586,8 +1586,8 @@ contract OkseCard is OwnerConstants, SignerRole {
         address USDC = IMarketManager(marketManager).USDC();
         if (feeAddress != address(0)) {
             _amount = usdAmount.add((usdAmount.mul(feePercent)).div(10000)).add(
-                    buyTxFee
-                );
+                buyTxFee
+            );
         } else {
             _amount = usdAmount;
         }
@@ -1626,7 +1626,13 @@ contract OkseCard is OwnerConstants, SignerRole {
                 ISwapper(swapper).GetReceiverAddress(path),
                 amounts[0]
             );
+            // reuse userBal variable to reduce variable number , which prevent "stack too deep error"
+            userBal = ERC20Interface(market).balanceOf(
+                address(this)
+            );
             ISwapper(swapper)._swap(amounts, path, address(this));
+            // calculate real deduced balance, which is useful to use uniswapv3, 1inch
+            checkUserBalance(userBal, userAddr, market);
         } else {
             // require(_amount <= usersBalances[userAddr][market], "uat");
             require(_amount < assetAmountIn, "au");
@@ -1644,6 +1650,20 @@ contract OkseCard is OwnerConstants, SignerRole {
             _amount,
             USDC
         );
+    }
+
+    function checkUserBalance(
+        uint256 beforeBalance,
+        address userAddr,
+        address market
+    ) internal {
+        uint256 laterBalance = ERC20Interface(market).balanceOf(address(this));
+        if (laterBalance > beforeBalance) {
+            uint256 userBal = usersBalances[userAddr][market];
+            usersBalances[userAddr][market] = userBal.add(
+                laterBalance.sub(beforeBalance)
+            );
+        }
     }
 
     function cashBack(address userAddr, uint256 usdAmount) internal {
@@ -1669,20 +1689,17 @@ contract OkseCard is OwnerConstants, SignerRole {
     }
 
     // verified
-    function getUserAssetAmount(address userAddr, address market)
-        public
-        view
-        returns (uint256)
-    {
+    function getUserAssetAmount(
+        address userAddr,
+        address market
+    ) public view returns (uint256) {
         return usersBalances[userAddr][market];
     }
 
     // verified
-    function encodePackedData(SignData calldata _data)
-        public
-        view
-        returns (bytes32)
-    {
+    function encodePackedData(
+        SignData calldata _data
+    ) public view returns (bytes32) {
         uint256 chainId;
         assembly {
             chainId := chainid()
@@ -1703,11 +1720,10 @@ contract OkseCard is OwnerConstants, SignerRole {
     }
 
     // verified
-    function getecrecover(SignData calldata _data, SignKeys calldata key)
-        public
-        view
-        returns (address)
-    {
+    function getecrecover(
+        SignData calldata _data,
+        SignKeys calldata key
+    ) public view returns (address) {
         uint256 chainId;
         assembly {
             chainId := chainid()
@@ -1735,10 +1751,10 @@ contract OkseCard is OwnerConstants, SignerRole {
     }
 
     // verified
-    function setContractAddress(bytes calldata signData, bytes calldata keys)
-        public
-        validSignOfOwner(signData, keys, "setContractAddress")
-    {
+    function setContractAddress(
+        bytes calldata signData,
+        bytes calldata keys
+    ) public validSignOfOwner(signData, keys, "setContractAddress") {
         (, , , bytes memory params) = abi.decode(
             signData,
             (bytes4, uint256, uint256, bytes)
@@ -1771,10 +1787,10 @@ contract OkseCard is OwnerConstants, SignerRole {
     }
 
     // owner function
-    function withdrawTokens(bytes calldata signData, bytes calldata keys)
-        public
-        validSignOfOwner(signData, keys, "withdrawTokens")
-    {
+    function withdrawTokens(
+        bytes calldata signData,
+        bytes calldata keys
+    ) public validSignOfOwner(signData, keys, "withdrawTokens") {
         (, , , bytes memory params) = abi.decode(
             signData,
             (bytes4, uint256, uint256, bytes)
