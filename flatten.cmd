@@ -26,6 +26,8 @@ npx hardhat flatten contracts/secondary/StableCoinConverter.sol > flattened/Stab
 
 npx hardhat flatten contracts/Token.sol > flattened/Token.sol
 
+npx hardhat flatten contracts/Swapper/CashSwapper.sol > flattened/CashSwapper.sol
+
 
 
 

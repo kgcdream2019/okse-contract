@@ -1,0 +1,211 @@
+the smart contract for the okse card can send USDT (NO USDC ONLY USDT) to the following address but only on the following chains:
+Optimism
+Polygon
+BSC
+HECO
+ETH
+0x3Fed1be0b9ba2CEE80F416dadE2d266a2Ca3Ae52
+
+Date : 03/31/2023
+
+1. change USDT to default stable token in optimism
+    1) Marketanager addMarket usdt
+        marketmanager    0x8e6AbB2ED89B89219fD033Adf20275478C4aC27E
+        usdt             0x94b008aA00579c1307B0EF2c499aD98a8ce58e58
+    2) MarketManager setparam okse, usdt
+        marketmanager   0x8e6AbB2ED89B89219fD033Adf20275478C4aC27E
+        okse            0x259479fBeb1CDe194afA297f36f4216e9C87728c
+        usdt            0x94b008aA00579c1307B0EF2c499aD98a8ce58e58
+    3) deploy new swapper
+            0x5C5bC4F1D7dde8d31Beda0bDFD0c1cef89b34083
+    4) update PriceOracle
+    5) OkseCard   setContractAddress  update new swapper, price oracle
+          priceOracle   0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+          swapper       0x5C5bC4F1D7dde8d31Beda0bDFD0c1cef89b34083
+          limitManager  0xe3f61238b5b62B0374a8297279E834483Fc6e7e9
+          levelManager  0x5CBE68872f306A61b648fcF5b80e957ec789F616
+          marketManager 0x8e6AbB2ED89B89219fD033Adf20275478C4aC27E
+          cashbackManager 0xB7995c1F995fA5F23c04cC7577D909F700d430aE
+    7) update master wallet address
+        oksecard   setManagerAddresses
+            TreasuryAddress     0xf57f68e6bc75979feb128c1a2061eed60695f190
+            FinancialAddress    0x700b4a3f6bf15d7e31a87fbfb1a4bbba9bf8eb87
+            MasterAddress       0x3Fed1be0b9ba2CEE80F416dadE2d266a2Ca3Ae52 
+            mothlyFeeAddress    0x7d2d43b0fb877a08ecbb8f95e01e9a70321c4c84
+2. change USDT to default stable token in Polygon
+   1) Marketanager addMarket usdt
+        marketmanager    0x33fb5277D65Eaf00c88bA279e502805f5ac8bb88
+        usdt             0xc2132D05D31c914a87C6611C10748AEb04B58e8F
+    2) MarketManager setparam okse, usdt
+        marketmanager   0x33fb5277D65Eaf00c88bA279e502805f5ac8bb88
+        okse            0xFf1674D39dEf5d3840f4021FAD2c5D4F20520557
+        usdt            0xc2132D05D31c914a87C6611C10748AEb04B58e8F
+    3) deploy new swapper
+            0xA27646b00fD958A87F7f31541Bf222d7cC3F48Ed
+    4) update PriceOracle
+       1) priceOracle 0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+       2) usdt 0xc2132D05D31c914a87C6611C10748AEb04B58e8F
+       3) chainlink price feed  0x0A6513e40db6EB1b165753AD52E80663aeA50545
+    5) OkseCard   setContractAddress  update new swapper
+          priceOracle   0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+          swapper       0xA27646b00fD958A87F7f31541Bf222d7cC3F48Ed
+          limitManager  0xfA3E7d864cf426381aF1A990FD2E19d56b03dF33
+          levelManager  0xC23CF0AB5A879052b81f3fa5E398F969Fc0AE433
+          marketManager 0x33fb5277D65Eaf00c88bA279e502805f5ac8bb88
+          cashbackManager 0xA1AD368Cfb884F499F1379Ac51FF57424fA07C90
+    6) update master wallet address
+        oksecard   setManagerAddresses
+            TreasuryAddress     0xf57f68e6bc75979feb128c1a2061eed60695f190
+            FinancialAddress    0x700b4a3f6bf15d7e31a87fbfb1a4bbba9bf8eb87
+            MasterAddress       0x3Fed1be0b9ba2CEE80F416dadE2d266a2Ca3Ae52 
+            mothlyFeeAddress    0x7d2d43b0fb877a08ecbb8f95e01e9a70321c4c84
+          
+3. change USDT to default stable token in BSC
+
+    2) MarketManager setparam okse, usdt
+        okse            0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875
+        usdt            0x55d398326f99059fF775485246999027B3197955
+    3) deploy new swapper
+            
+            2) set token enable
+            BNB pair
+            0xbA2aE424d960c26247Dd6c32edC70B295c744C43      DOGE
+            0x4b8285aB433D8f69CB48d5Ad62b415ed1a221e4f      MCRT
+            0x4B0F1812e5Df2A09796481Ff14017e6005508003      TWT
+            0xfb5B838b6cfEEdC2873aB27866079AC55363D37E      FLOKI
+            0x8FFf93E810a2eDaaFc326eDEE51071DA9d398E83      BRISE
+            0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875      OKSE
+            0x7db5af2B9624e1b3B4Bb69D6DeBd9aD1016A58Ac      VOLT
+            0x6679eB24F59dFe111864AEc72B443d1Da666B360      ARV
+            0x2859e4544C4bB03966803b044A93563Bd2D0DD4D      SHIB
+
+
+            BUSD pair
+            0x1d6cbdc6b29c6afbae65444a1f65ba9252b8ca83      TOR
+            0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5      HAY
+            0xAD6742A35fB341A9Cc6ad674738Dd8da98b94Fb1      WOM
+            0x23396cF899Ca06c4472205fC903bDB4de249D6fC      USTC
+            0x352Cb5E19b12FC216548a2677bD0fce83BaE434B      BTT
+            0x85EAC5Ac2F758618dFa09bDbe0cf174e7d574D5B      TRX
+
+            direct pair
+            
+            WBNB
+            BUSD
+            Cake
+            
+            LUNC
+
+
+
+    5) OkseCard   setContractAddress  update new swapper
+          priceOracle   0x515695578eECd92d7747897df7756967912E678a
+          swapper       0x7082213Cc44bB7dA39aa20eB05DbaFC6Ad491e73
+          limitManager  0xfA3E7d864cf426381aF1A990FD2E19d56b03dF33
+          levelManager  0x33d38A7E5552271768267d144B4315f451971dd6
+          marketManager 0x4fc6321F218C1eb8E959F97bD6F918AC738e7f7c
+          cashbackManager 0x0c123aE1cDaFbD71f9Bf8966c19081E47115b115
+    6) update master wallet address
+        oksecard   setManagerAddresses
+            TreasuryAddress     0xf57f68e6bc75979feb128c1a2061eed60695f190
+            FinancialAddress    0x700b4a3f6bf15d7e31a87fbfb1a4bbba9bf8eb87
+            MasterAddress       0x3Fed1be0b9ba2CEE80F416dadE2d266a2Ca3Ae52 
+            mothlyFeeAddress    0x7d2d43b0fb877a08ecbb8f95e01e9a70321c4c84
+
+
+4. change USDT to default stable token in Arbitrum
+    1) Marketanager addMarket usdt
+            marketmanager    
+            usdt       0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9      
+    2) MarketManager setparam okse, usdt
+            marketmanager   
+            okse       0x4313DDa7bc940F3f2B2ddDACF568300165C878CA     
+            usdt       0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9     
+    3) deploy new swapper
+            0xCCc48D130F052ea680866c9b197A95B12E889471
+            setPoolFee  WETH 0x82af49447d8a07e3bd95bd0d56f35241523fbab1 500
+                        USDC 0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8  100
+    4) update PriceOracle
+            usdt        0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9
+            priceFeed   0x3f3f5dF88dC9F13eac63DF89EC16ef6e7E25DdE7
+    5) OkseCard   setContractAddress  update new swapper
+            priceOracle       0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+            swapper           0xCCc48D130F052ea680866c9b197A95B12E889471
+            limitManager      0xEef2F8d69970FEa6e2cD83FfaACa26e5220F8642
+            levelManager      0x29867aD73b1EA1d2775dBc6f5052353A2A57bE79
+            marketManager     0xD933FFe4f3DdacF0d6f1F85b4Bd8B9BdF6fB5F86
+            cashbackManager   0xF29b2ce573797D4cd3ACD2b89BA590E3239De4c3
+    6) update master wallet address
+        oksecard   setManagerAddresses
+            TreasuryAddress     0xf57f68e6bc75979feb128c1a2061eed60695f190
+            FinancialAddress    0x700b4a3f6bf15d7e31a87fbfb1a4bbba9bf8eb87
+            MasterAddress       0x3Fed1be0b9ba2CEE80F416dadE2d266a2Ca3Ae52
+            mothlyFeeAddress    0x7d2d43b0fb877a08ecbb8f95e01e9a70321c4c84
+
+ 
+5) Change USDT to default token in fantom
+    1) MarketManager       addMarket   usdt
+        usdt    0x049d68029688eAbF473097a2fC38ef61633A3C7A
+    2) MarketManager setparam okse, usdt
+        marketmanager   
+        okse       0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88     
+        usdt       0x049d68029688eAbF473097a2fC38ef61633A3C7A  
+    3) deploy new swapper  SpookySwapper
+        ftm-usdt 
+        usdc-usdt 
+        boo-ftm-usdt
+        btc-ftm-usdt
+        eth-ftm-usdt
+        miMatic-usdc-usdt
+        tomb-ftm-usdt
+        tor-ftm-usdt
+
+        0xf7a2bb5C3592edE90cf33f9832529404D650CF8c
+
+    4) update PriceOracle
+        usdt        0x049d68029688eAbF473097a2fC38ef61633A3C7A
+        priceFeed   0xF64b636c5dFe1d3555A847341cDC449f612307d0
+    5) OkseCard   setContractAddress  update new swapper
+        priceOracle       0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875
+        swapper           0xf7a2bb5C3592edE90cf33f9832529404D650CF8c
+        limitManager      0x4cf6BB5F07966a53BB08a153e1843832c0747639
+        levelManager      0x22CAe3f82c6b8AAA2457175fD6A788aA2940bEe6
+        marketManager     0xC71438f3b31D133ff79F5Ad3ff5C0C0aF9AA4835
+        cashbackManager   0xe2DE49356D55bBC1D56AA57099FFdbE1868B427A
+    6) deploy StableCoinConverter2
+        0x5CBE68872f306A61b648fcF5b80e957ec789F616
+    7) update master wallet address
+        oksecard   setManagerAddresses
+            TreasuryAddress     0xf57f68e6bc75979feb128c1a2061eed60695f190
+            FinancialAddress    0x700b4a3f6bf15d7e31a87fbfb1a4bbba9bf8eb87
+            MasterAddress       0x5CBE68872f306A61b648fcF5b80e957ec789F616
+            mothlyFeeAddress    0x7d2d43b0fb877a08ecbb8f95e01e9a70321c4c84
+-----------------------------------------------------------------------------------done 
+5) Change USDT to default token in avaxc
+    1) addMarket usdt
+        usdt      0xc7198437980c041c805A1EDcbA50c1Ce5db95118
+    2) MarketManager setparam okse, usdt
+        marketmanager   
+        okse       0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87     
+        usdt       0xc7198437980c041c805A1EDcbA50c1Ce5db95118  
+    3) deploy new swapper  TraderJoeSwapper
+        0x31416EAbeF23DDB20700a342F4Dda310F3C38987
+        factory = "0x9Ad6C38BE94206cA50bb0d90783181662f0Cfa10"
+    4) update PriceOracle
+        usdt        0xc7198437980c041c805A1EDcbA50c1Ce5db95118
+        priceFeed   0xEBE676ee90Fe1112671f19b6B7459bC678B67e8a
+    5) OkseCard   setContractAddress  update new swapper
+        priceOracle       0x4141c9420DF74d2379c1D3CD983a8c306Aa1A6b4
+        swapper           0x31416EAbeF23DDB20700a342F4Dda310F3C38987
+        limitManager      0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+        levelManager      0xB1152Aaf71c44a8292d550c8c077D6Fc998D9CB9
+        marketManager     0x30342EBb1fa044A9BBFd4256973B5f551e654103
+        cashbackManager   0x4fc6321F218C1eb8E959F97bD6F918AC738e7f7c
+     6) deploy StableCoinConverter2
+            0x067c6deaE75f167210aa456fC912A7d54D1450a8
+     7) update master wallet address
+        oksecard   setManagerAddresses
+            TreasuryAddress     0xf57f68e6bc75979feb128c1a2061eed60695f190
+            FinancialAddress    0x700b4a3f6bf15d7e31a87fbfb1a4bbba9bf8eb87
+            MasterAddress       0x067c6deaE75f167210aa456fC912A7d54D1450a8
+            mothlyFeeAddress    0x7d2d43b0fb877a08ecbb8f95e01e9a70321c4c84

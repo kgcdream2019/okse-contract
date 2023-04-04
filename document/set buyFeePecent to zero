@@ -1,0 +1,55 @@
+Date 03/04/2023
+set buyFeePercent to zero for all chains
+
+- fantom
+OkseCard  setFeeValues
+        monthlyFeeAmount    6990000000000000000 
+        okseMonthlyProfit   1000
+        withdrawFeePercent  0
+        BuyFeePercent       250  -> 0
+        BuyTxFee            200000000000000000 
+- bsc
+    OkseCard  setFeeValues
+        monthlyFeeAmount    6990000000000000000 
+        okseMonthlyProfit   1000
+        withdrawFeePercent  0
+        BuyFeePercent       250  -> 0
+        BuyTxFee            700000000000000000
+-  avaxc
+    OkseCard  setFeeValues
+        monthlyFeeAmount    6990000000000000000 
+        okseMonthlyProfit   1000
+        withdrawFeePercent  0
+        BuyFeePercent       250  -> 0
+        BuyTxFee            200000000000000000
+
+-  OKC
+    OkseCard  setFeeValues
+        monthlyFeeAmount    6990000000000000000 
+        okseMonthlyProfit   1000
+        withdrawFeePercent  0
+        BuyFeePercent       250  -> 0
+        BuyTxFee            10000000000000000    
+-  arbitrum
+    OkseCard  setFeeValues
+        monthlyFeeAmount    6990000000000000000 
+        okseMonthlyProfit   1000
+        withdrawFeePercent  0
+        BuyFeePercent       250  -> 0
+        BuyTxFee            500000000000000000   
+
+-  polygon
+    OkseCard  setFeeValues
+        monthlyFeeAmount    6990000000000000000 
+        okseMonthlyProfit   1000
+        withdrawFeePercent  0
+        BuyFeePercent       250  -> 0
+        BuyTxFee            20000000000000000   
+
+-  optimism
+    OkseCard  setFeeValues
+        monthlyFeeAmount    6990000000000000000 
+        okseMonthlyProfit   1000
+        withdrawFeePercent  0
+        BuyFeePercent       250  -> 0
+        BuyTxFee            500000000000000000   

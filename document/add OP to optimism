@@ -1,0 +1,14 @@
+    1) Marketanager addMarket OP
+        marketmanager    0x8e6AbB2ED89B89219fD033Adf20275478C4aC27E
+        OP               0x4200000000000000000000000000000000000042
+    2) Swapper 
+        WETH/OP  0.3% pool      9 MAI
+        WETH/OP  0.05% pool     698 KB
+        OP/USDT  0.05% pool     34.6 K
+
+        Swapper     0x5C5bC4F1D7dde8d31Beda0bDFD0c1cef89b34083  setPoolFee  0x4200000000000000000000000000000000000042  500
+    3) PriceOracle
+        OP              0x4200000000000000000000000000000000000042
+        priceFeed       0x0D276FC14719f9292D5C1eA2198673d1f4269246
+
+    4) update backend api

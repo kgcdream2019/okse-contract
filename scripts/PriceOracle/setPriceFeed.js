@@ -19,6 +19,9 @@ async function main() {
     else if (network.name === "arbitrum") {
         contractAddress = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7";
     }
+    else if (network.name === "polygon") {
+        contractAddress = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7";
+    }
     else if (network.name === "optimism") {
         contractAddress = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7";
     }
@@ -99,6 +102,9 @@ async function main() {
 
         // asset = "0x3b53D2C7B44d40BE05Fa5E2309FFeB6eB2492d88"; // OKSE
         // priceFeed = "0x0aaBC7C5380E01Bd30e555aCa966d9C8A86751f5"; // OKSE Feed
+
+        asset = "0x049d68029688eAbF473097a2fC38ef61633A3C7A"; // USDT
+        priceFeed = "0xF64b636c5dFe1d3555A847341cDC449f612307d0"; // USDT Feed
     }
     else if (network.name === "avaxc") {
         chainId = 43114;
@@ -117,6 +123,10 @@ async function main() {
 
         // asset = "0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87"; // OKSE
         // priceFeed = "0xC146794e568D1B4087F2D79Bf5e3fBF18Fe5Ff76"; // OKSE Feed
+
+        asset = "0xc7198437980c041c805A1EDcbA50c1Ce5db95118"; // USDT
+        priceFeed = "0xEBE676ee90Fe1112671f19b6B7459bC678B67e8a"; // USDT Feed
+
     }
     else if(network.name === "okex"){
         chainId = 66;
@@ -140,6 +150,10 @@ async function main() {
         priceFeed = "0x639Fe6ab55C921f74e7fac1ee960C0B6293ba612";
         asset = USDC
         priceFeed = "0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3";
+        asset = "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9" //USDT
+        priceFeed = "0x3f3f5dF88dC9F13eac63DF89EC16ef6e7E25DdE7";
+        asset = "0x912CE59144191C1204E64559FE8253a0e49E6548" //ARB
+        priceFeed = "0xCA05Ac61090A4f9A45506F5B55Eeb743006cC04F";
     }
     else if(network.name === "optimism"){
         chainId = 10;
@@ -148,10 +162,16 @@ async function main() {
         const okse = "0x259479fBeb1CDe194afA297f36f4216e9C87728c";  // OKSE 
         asset = WETH
         priceFeed = "0x13e3Ee699D1909E989722E753853AE30b17e08c5";
-        asset = USDC
-        priceFeed = "0x16a9FA2FDa030272Ce99B29CF780dFA30361E0f3";
+        // asset = USDC
+        // priceFeed = "0x16a9FA2FDa030272Ce99B29CF780dFA30361E0f3";
+        
+        // asset = "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58";   // USDT
+        // priceFeed = "0xECef79E109e997bCA29c1c0897ec9d7b03647F5E";
+
+        asset = "0x4200000000000000000000000000000000000042";   // OP
+        priceFeed = "0x0D276FC14719f9292D5C1eA2198673d1f4269246";
     }
-    let signData = getSignData("setPriceFeed", 46, ["address", "address"], [asset, priceFeed])
+    let signData = getSignData("setPriceFeed", 53, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     let tx = await multiSigContract.setPriceFeed(signData, keys);

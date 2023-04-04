@@ -1,0 +1,16 @@
+    1) Marketanager addMarket ARB
+        marketmanager    0xD933FFe4f3DdacF0d6f1F85b4Bd8B9BdF6fB5F86
+        ARB              0x912CE59144191C1204E64559FE8253a0e49E6548
+    2) Swapper 
+
+        Swapper     0xCCc48D130F052ea680866c9b197A95B12E889471  setPoolFee  0x912CE59144191C1204E64559FE8253a0e49E6548  3000
+    3) PriceOracle
+        - deploy UniswapV3TwapPriceFeed for ARB price feed
+        - 
+        ARB             0x912CE59144191C1204E64559FE8253a0e49E6548
+        priceFeed       UniswapV3TwapPriceFeed  0xCA05Ac61090A4f9A45506F5B55Eeb743006cC04F
+                            token   0x912CE59144191C1204E64559FE8253a0e49E6548
+                            usdt    0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9
+                            factory 0x1F98431c8aD98523631AE4a59f267346ea31F984
+
+    4) update backend api

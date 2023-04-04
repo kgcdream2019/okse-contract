@@ -11,7 +11,7 @@ contract QuickSwapper is Ownable {
     // factory address for AMM dex, normally we use spookyswap on fantom chain.
     address public factory;
     address public constant WMATIC = 0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270;
-    address public constant USDC = 0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174;
+    address public constant USDT = 0xc2132D05D31c914a87C6611C10748AEb04B58e8F;
     mapping(address => bool) public tokenList;
     event TokenEnableUpdaated(address tokenAddr, bool bEnable);
 
@@ -71,11 +71,11 @@ contract QuickSwapper is Ownable {
         view
         returns (address[] memory path)
     {
-        if (tokenList[token0] && token1 == USDC) {
+        if (tokenList[token0] && token1 == USDT) {
             path = new address[](3);
             path[0] = token0;
             path[1] = WMATIC;
-            path[2] = USDC;
+            path[2] = USDT;
         } else {
             path = new address[](2);
             path[0] = token0;

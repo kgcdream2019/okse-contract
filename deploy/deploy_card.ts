@@ -68,8 +68,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   if (network.name === "bscmainnet") {
     _WETH = "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c"; // WBNB
-    USDT = "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56"; // BUSD
-    okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE / SPIRIT
+    USDT = "0x55d398326f99059fF775485246999027B3197955"; // USDT
+    okse = "0x606FB7969fC1b5CAd58e64b12Cf827FB65eE4875"; // OKSE
     factory = "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73"; // pancakeswap factory
     swapper = await deploy("PancakeSwapper", {
       from: deployer,
@@ -101,7 +101,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   if (network.name === "arbitrum") {
     _WETH = "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"; // WETH
-    USDT = "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"; // USDC
+    USDT = "0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9"; // USDT
     okse = "0x4313DDa7bc940F3f2B2ddDACF568300165C878CA"; // OKSE
     const router = "0xE592427A0AEce92De3Edee1F18E0157C05861564"; // uniswap v3 abitrum router
     swapper = await deploy("UniswapV3Swapper", {
@@ -112,7 +112,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   if (network.name === "polygon") {
     _WETH = "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"; // WMATIC
-    USDT = "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174"; // USDC
+    USDT = "0xc2132D05D31c914a87C6611C10748AEb04B58e8F"; // USDC
     okse = "0xFf1674D39dEf5d3840f4021FAD2c5D4F20520557"; // OKSE
     factory = "0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32"; // quickswap factory
     swapper = await deploy("QuickSwapper", {
@@ -123,9 +123,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   if (network.name === "optimism") {
     _WETH = "0x4200000000000000000000000000000000000006"; // WETH
-    USDT = "0x7F5c764cBc14f9669B88837ca1490cCa17c31607"; // USDC
+    USDT = "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58"; // USDC
     okse = "0x259479fBeb1CDe194afA297f36f4216e9C87728c"; // OKSE
-    const router = "0xE592427A0AEce92De3Edee1F18E0157C05861564"; // uniswap v3 abitrum router
+    const router = "0xE592427A0AEce92De3Edee1F18E0157C05861564"; // uniswap v3 router 02
     swapper = await deploy("UniswapV3Swapper", {
       from: deployer,
       args: [router, oksecardPriceOracle.address, _WETH, USDT],

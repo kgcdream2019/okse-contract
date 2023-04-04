@@ -40,6 +40,7 @@ interface AggregatorV3Interface {
 
 // File contracts/interfaces/ERC20Interface.sol
 
+//-License-Identifier: UNLICENSED
 pragma solidity ^0.7.0;
 
 interface ERC20Interface {
@@ -136,6 +137,7 @@ interface ERC20Interface {
 
 // File contracts/libraries/SafeMath.sol
 
+//-License-Identifier: UNLICENSED
 pragma solidity ^0.7.0;
 
 /**
@@ -303,6 +305,7 @@ library SafeMath {
 
 // File @openzeppelin/contracts/utils/Context.sol@v3.4.2
 
+// -License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -330,6 +333,7 @@ abstract contract Context {
 
 // File @openzeppelin/contracts/access/Ownable.sol@v3.4.2
 
+// -License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -400,6 +404,7 @@ abstract contract Ownable is Context {
 
 // File @uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolImmutables.sol@v1.0.0
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
 /// @title Pool state that never changes
@@ -438,6 +443,7 @@ interface IUniswapV3PoolImmutables {
 
 // File @uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolState.sol@v1.0.0
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
 /// @title Pool state that can change
@@ -557,6 +563,7 @@ interface IUniswapV3PoolState {
 
 // File @uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolDerivedState.sol@v1.0.0
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
 /// @title Pool state that is not stored
@@ -600,6 +607,7 @@ interface IUniswapV3PoolDerivedState {
 
 // File @uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolActions.sol@v1.0.0
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
 /// @title Permissionless pool actions
@@ -706,6 +714,7 @@ interface IUniswapV3PoolActions {
 
 // File @uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolOwnerActions.sol@v1.0.0
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
 /// @title Permissioned pool actions
@@ -732,6 +741,7 @@ interface IUniswapV3PoolOwnerActions {
 
 // File @uniswap/v3-core/contracts/interfaces/pool/IUniswapV3PoolEvents.sol@v1.0.0
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
 /// @title Events emitted by a pool
@@ -856,6 +866,7 @@ interface IUniswapV3PoolEvents {
 
 // File @uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol@v1.0.0
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
 
@@ -881,6 +892,7 @@ interface IUniswapV3Pool is
 
 // File @uniswap/v3-core/contracts/libraries/TickMath.sol@v1.0.0
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
 /// @title Math library for computing sqrt prices from ticks and vice versa
@@ -1089,6 +1101,7 @@ library TickMath {
 
 // File @uniswap/v3-core/contracts/libraries/FixedPoint96.sol@v1.0.0
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.4.0;
 
 /// @title FixedPoint96
@@ -1102,6 +1115,7 @@ library FixedPoint96 {
 
 // File @uniswap/v3-core/contracts/libraries/FullMath.sol@v1.0.0
 
+// -License-Identifier: MIT
 pragma solidity >=0.4.0;
 
 /// @title Contains 512-bit math functions
@@ -1229,6 +1243,7 @@ library FullMath {
 
 // File @uniswap/v3-periphery/contracts/libraries/PoolAddress.sol@v1.4.2
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.5.0;
 
 /// @title Provides functions for deriving a pool address from the factory, tokens, and the fee
@@ -1280,6 +1295,7 @@ library PoolAddress {
 
 // File contracts/CustomPriceFeed/UniswapV3TwapPriceFeed.sol
 
+//-License-Identifier: LICENSED
 
 pragma solidity ^0.7.0;
 contract UniswapV3TwapPriceFeed is AggregatorV3Interface, Ownable {

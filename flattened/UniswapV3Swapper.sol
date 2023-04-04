@@ -169,6 +169,7 @@ interface IUniswapV3SwapCallback {
 // File @uniswap/v3-periphery/contracts/interfaces/ISwapRouter.sol@v1.4.2
 
 pragma solidity >=0.7.5;
+pragma abicoder v2;
 
 /// @title Router token swapping functionality
 /// @notice Functions for swapping tokens via Uniswap V3
@@ -615,7 +616,6 @@ library SafeMath {
 // Solidity files have to start with this pragma.
 // It will be used by the Solidity compiler to validate its version.
 pragma solidity ^0.7.0;
-pragma abicoder v2;
 contract UniswapV3Swapper is Ownable {
     using SafeMath for uint256;
     address public immutable WETH;

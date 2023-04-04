@@ -5,15 +5,19 @@
 pragma solidity ^0.7.0;
 import "./traderjoe/interfaces/IJoePair.sol";
 import "./traderjoe/libraries/JoeLibrary.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract TraderJoeSwapper {
+contract TraderJoeSwapper is Ownable {
     // factory address for AMM dex, normally we use spookyswap on fantom chain.
     address public factory;
     address public constant WAVAX = 0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7;
-    // address public constant USDC = 0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E;
-    address public constant USDC = 0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664;
+    address public constant USDC = 0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E;
+    address public constant USDCe = 0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664;
+    address public constant USDTe = 0xc7198437980c041c805A1EDcbA50c1Ce5db95118;
     address public constant OKSE = 0xbc7B0223Dd16cbc679c0D04bA3F4530D76DFbA87;
-
+    mapping(address => address) public tokenList;
+    event TokenSwapPathUpdated(address tokenAddr, address middleToken);
+    
     constructor(address _factory) {
         factory = _factory;
     }
@@ -45,45 +49,51 @@ contract TraderJoeSwapper {
         }
     }
 
-    function getAmountsIn(uint256 amountOut, address[] memory path)
-        external
-        view
-        returns (uint256[] memory amounts)
-    {
+    function getAmountsIn(
+        uint256 amountOut,
+        address[] memory path
+    ) external view returns (uint256[] memory amounts) {
         return JoeLibrary.getAmountsIn(factory, amountOut, path);
     }
 
-    function getAmountsOut(uint256 amountIn, address[] memory path)
-        external
-        view
-        returns (uint256[] memory amounts)
-    {
+    function getAmountsOut(
+        uint256 amountIn,
+        address[] memory path
+    ) external view returns (uint256[] memory amounts) {
         return JoeLibrary.getAmountsOut(factory, amountIn, path);
     }
 
-    function GetReceiverAddress(address[] memory path)
-        external
-        view
-        returns (address)
-    {
+    function GetReceiverAddress(
+        address[] memory path
+    ) external view returns (address) {
         return JoeLibrary.pairFor(factory, path[0], path[1]);
     }
 
-    function getOptimumPath(address token0, address token1)
-        external
-        view
-        returns (address[] memory path)
-    {
-        if (token0 == OKSE && token1 == USDC) {
-            //OKSE-USDC pair
+    function getOptimumPath(
+        address token0,
+        address token1
+    ) external view returns (address[] memory path) {
+        if (tokenList[token0] != address(0) && token1 == USDTe) {
             path = new address[](3);
-            path[0] = OKSE;
-            path[1] = WAVAX;
-            path[2] = USDC;
+            path[0] = token0;
+            path[1] = tokenList[token0];
+            path[2] = USDTe;
         } else {
             path = new address[](2);
             path[0] = token0;
             path[1] = token1;
         }
+    }
+
+    function _setMiddleToken(address tokenAddr, address middleToken) internal {
+        tokenList[tokenAddr] = middleToken;
+        emit TokenSwapPathUpdated(tokenAddr, middleToken);
+    }
+
+    function setMiddleToken(
+        address tokenAddr,
+        address middleToken
+    ) external onlyOwner {
+        _setMiddleToken(tokenAddr, middleToken);
     }
 }
