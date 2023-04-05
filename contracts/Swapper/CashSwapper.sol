@@ -36,6 +36,7 @@ contract CashSwapper is Ownable {
         uint256 _minimumUnitAmount = 0;
         IVault(vault).redeem(_amount, _minimumUnitAmount);
         // convert usdc to usdt
+        // convert dai to usdt
     }
 
     function getAmountsIn(

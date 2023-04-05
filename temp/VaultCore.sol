@@ -9,37 +9,27 @@ pragma solidity ^0.8.0;
            interest from yield bearing strategies which will modify the supply
            of CASH.
  * @author Stabl Protocol Inc
-
- * @dev The following are the meaning of abbreviations used in the contracts
-        PS: Primary Stable
-        PSD: Primary Stable Decimals
  */
 
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { SafeMath } from "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import { StableMath } from "../utils/StableMath.sol";
+import { OvnMath } from "../utils/OvnMath.sol";
 import { IOracle } from "../interfaces/IOracle.sol";
-import { IRebaseHandler } from "../interfaces/IRebaseHandler.sol";
+import { IVaultAdmin } from "../interfaces/IVaultAdmin.sol";
 import "../exchanges/MiniCurveExchange.sol";
 import "./VaultStorage.sol";
 import "hardhat/console.sol";
 
-contract VaultCore is VaultStorage, MiniCurveExchange  {
+contract VaultCore is VaultStorage, MiniCurveExchange {
     using SafeERC20 for IERC20;
     using StableMath for uint256;
     using SafeMath for uint256;
+    using OvnMath for uint256;
 
-    uint256 constant MAX_UINT =
-        0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
+    uint256 constant MAX_UINT = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
 
-    /**
-     * @dev Verifies that the rebasing is not paused.
-     */
-    modifier whenNotRebasePaused() {
-        require(!rebasePaused, "Rebasing paused");
-        _;
-    }
 
     /**
      * @dev Verifies that the deposits are not paused.
@@ -48,7 +38,10 @@ contract VaultCore is VaultStorage, MiniCurveExchange  {
         require(!capitalPaused, "Capital paused");
         _;
     }
-
+    modifier onlyVault() {
+        require(msg.sender == address(this), "!VAULT");
+        _;
+    }
     modifier onlyGovernorOrDripperOrRebaseManager() {
         require(
             isGovernor() || rebaseManagers[msg.sender] || (msg.sender == dripperAddress),
@@ -69,9 +62,7 @@ contract VaultCore is VaultStorage, MiniCurveExchange  {
         uint256 _amount,
         uint256 _minimumCASHAmount
     ) external whenNotCapitalPaused nonReentrant {
-       
         _mint(_asset, _amount, _minimumCASHAmount);
-        _quickAllocate();
     }
 
     /**
@@ -85,378 +76,272 @@ contract VaultCore is VaultStorage, MiniCurveExchange  {
         uint256 _amount,
         uint256 _minimumCASHAmount
     ) internal {
-        require(assets[_asset].isSupported, "Asset is not supported");
-        require(_amount > 0, "Amount must be greater than 0");
-
-        // Rebase must happen before any transfers occur.
-        if (!rebasePaused) { 
-            _rebase();
-        }
-        // Transfer the deposited coins to the vault
-        IERC20 asset = IERC20(_asset);
-        asset.safeTransferFrom(msg.sender, address(this), _amount);
-
-        uint256 PSDecimals = Helpers.getDecimals(primaryStableAddress);
-
-        // Get the value of asset equivalent to PS
-        uint256 primaryStableAmount = _amount;
-        if (_asset != primaryStableAddress) {
-            // If the asset is not PS, swap it to PS
-            primaryStableAmount = _swapAsset(_asset, primaryStableAddress);
-            // If the amount after swapping is more than provided amount, we need to max out the primaryStableAmount to the amount provided
-            if (primaryStableAmount.scaleBy(18, PSDecimals) > _amount.scaleBy(18, Helpers.getDecimals(_asset))) {
-                primaryStableAmount = _amount.scaleBy(PSDecimals, Helpers.getDecimals(_asset));
-            }
+        require(assets[_asset].isSupported, "NS");
+        require(_amount > 0, ">0");
+        
+        for(uint256 i = 0; i < allAssets.length; i++) {
+            validateAssetPeg(allAssets[i], depegMargin); // 1% = 100
         }
 
-        // Get the current price of PS
-        uint256 price = IOracle(priceProvider).price(primaryStableAddress);
-        // If price of PS is above USD, pull to max $1
-        if (price > 1e8) {
-            price = 1e8;
+        // Prequisites
+        IERC20 _assetToken = IERC20(_asset);
+        uint256 _assetDecimals = Helpers.getDecimals(_asset);
+        uint256 _price = price();
+        uint256 _initNav = nav();
+        _assetToken.safeTransferFrom(msg.sender, address(this), _amount);
+
+        // Precalculate mint fee and toUseAsset
+        uint256 _toUseAsset = _amount;
+        if ((mintFeeBps > 0) && (treasuryAddress != address(0)) && (isFeeExempt(msg.sender) == false)) {
+            uint256 _mintFee = _amount.mul(mintFeeBps).div(10000);
+            _toUseAsset = _toUseAsset.sub(_mintFee);
+            _assetToken.safeTransfer(treasuryAddress, _mintFee);
+            emit TreasuryRemitted(_asset, _mintFee);
+
         }
-        require(price >= MINT_MINIMUM_ORACLE, "Asset price below Peg");
+        uint256 _toMintCASH = _toUseAsset.scaleBy(18, _assetDecimals);
+        IVaultAdmin(address(this)).balance();
 
+        uint256 _change = nav().subOrZero(_initNav);
+        require(_change > 0, "NO_DIFF_IN_NAV");
+        console.log("PRICE", _price);
+        console.log("NAV_CHANGE", _change);
+        uint256 _toMintBasedOnPrice = _change.scaleBy(18, 8).mul(10**18).div(_price);
+        console.log("MINT_BASED_ON_PRICE", _toMintBasedOnPrice);
 
-        // Mint fee
-        if (mintFeeBps > 0 && treasuryAddress != address(0)) {
-            uint256 mintFee = primaryStableAmount.mul(mintFeeBps).div(10000);
-            primaryStableAmount = primaryStableAmount.sub(mintFee);
-            IERC20(primaryStableAddress).safeTransfer(treasuryAddress, mintFee);
-            emit MintFeeCharged(msg.sender, mintFee);
-        }
+        
 
-        // Multiply the amount by price &  Scale up to 18 decimal
-        uint256 priceAdjustedDeposit = primaryStableAmount.mulTruncateScale(
-            price.scaleBy(18, 8), // Oracles have 8 decimal precision
-            10**PSDecimals
-        );
+        // Choose whichever is lower in value
+        uint256 _mintAmount = _toMintBasedOnPrice < _toMintCASH ? _toMintBasedOnPrice : _toMintCASH;
+        require(_mintAmount >= _minimumCASHAmount, "Mint amount lower than minimum");
+        cash.mint(msg.sender, _mintAmount);
 
-        if (_minimumCASHAmount > 0) {
-            require(
-                priceAdjustedDeposit >= _minimumCASHAmount,
-                "Mint amount lower than minimum"
-            );
-        }
-
-        emit Mint(msg.sender, priceAdjustedDeposit);
-
-        // Mint matching CASH
-        cash.mint(msg.sender, priceAdjustedDeposit);
         lastMints[msg.sender] = block.number;
+        emit Mint(msg.sender, _mintAmount);
     }
 
-    // In memoriam
 
     /**
      * @dev Withdraw a supported asset and burn CASH.
      * @param _amount Amount of CASH to burn
      * @param _minimumUnitAmount Minimum stablecoin units to receive in return
      */
-    function redeem(uint256 _amount, uint256 _minimumUnitAmount)
-        external
-        whenNotCapitalPaused
-        nonReentrant
-    {
+    function redeem(uint256 _amount, uint256 _minimumUnitAmount) external whenNotCapitalPaused nonReentrant {
         _redeem(_amount, _minimumUnitAmount);
     }
 
     /**
      * @dev Withdraw the PS against CASH and burn CASH.
      * @param _amount Amount of CASH to burn
-     * @param _minimumUnitAmount Minimum stablecoin units to receive in return
+     * @param _minimumUsd Minimum usd worth of returns.
      */
-    function _redeem(uint256 _amount, uint256 _minimumUnitAmount) internal {
-        require(_amount > 0, "Amount must be greater than 0");
-        require( cash.balanceOf(msg.sender) >=  _amount, "Insufficient Amount!");
-        require(block.number > lastMints[msg.sender], "Wait after mint");
-        (
-            uint256 output,
-            uint256 backingValue,
-            uint256 redeemFee
-        ) = _calculateRedeemOutput(_amount);
-        uint256 primaryStableDecimals = Helpers.getDecimals(primaryStableAddress);
+    function _redeem(uint256 _amount, uint256 _minimumUsd) internal {
+        require(_amount > 0, "!AMOUNT");
+        require(cash.balanceOf(msg.sender) >= _amount, "INSUF_CASH");
+        require(block.number > lastMints[msg.sender], "WAIT_AFTER_MINT");
 
-        // Check that CASH is backed by enough assets
-        uint256 _totalSupply = cash.totalSupply();
-        if (maxSupplyDiff > 0) {
-            // Allow a max difference of maxSupplyDiff% between
-            // backing assets value and CASH total supply
-            uint256 diff = _totalSupply.divPrecisely(backingValue);
-            require(
-                (diff > 1e18 ? diff.sub(1e18) : uint256(1e18).sub(diff)) <=
-                    maxSupplyDiff,
-                "Backing supply liquidity error"
-            );
-        }
-        if (_minimumUnitAmount > 0) {
-            uint256 unitTotal = output.scaleBy(18, primaryStableDecimals);
-            require(
-                unitTotal >= _minimumUnitAmount,
-                "Redeem amount lower than minimum"
-            );
-        }
-        emit Redeem(msg.sender, _amount);
+        uint256 _initNav = nav();
 
-        // Send output
-        require(output > 0, "Nothing to redeem");
-        // console.log("Total redeemable: ",  redeemFee+output);
-        IERC20 primaryStable = IERC20(primaryStableAddress);
-        address[] memory strategiesToWithdrawFrom = new address[](strategyWithWeights.length);
-        uint256[] memory amountsToWithdraw = new uint256[](strategyWithWeights.length);
-        uint256 totalAmount = primaryStable.balanceOf(address(this));
-        if ((totalAmount < (output+redeemFee)) && (strategyWithWeights.length == 0)) {
-            revert("Source strats not set");
-        }
-        uint8 strategyIndex = 0;
-        uint8  index = 0;
-        while((totalAmount < (output + redeemFee)) && (strategyIndex < strategyWithWeights.length)) {
-            uint256 currentStratBal = IStrategy(strategyWithWeights[strategyIndex].strategy).checkBalance();
-            // console.log("Current strategy balance:", strategyWithWeights[strategyIndex].strategy, currentStratBal);
-            if (currentStratBal > 0) {
-                if ( (currentStratBal + totalAmount) > (output + redeemFee) ) {
-                    strategiesToWithdrawFrom[index] = strategyWithWeights[strategyIndex].strategy;
-                    amountsToWithdraw[index] = currentStratBal - ((currentStratBal + totalAmount) - (output + redeemFee));
-                    totalAmount += currentStratBal - ((currentStratBal + totalAmount) - (output + redeemFee));
-                } else {
-                    strategiesToWithdrawFrom[index] = strategyWithWeights[strategyIndex].strategy;
-                    amountsToWithdraw[index] = 0; // 0 means withdraw all
-                    totalAmount += currentStratBal;
-                }
-                index++;
-            }
-            // console.log("Total amount after:", strategyWithWeights[strategyIndex].strategy, totalAmount);
-
-            strategyIndex++;
-        }
-        // console.log("Total amount:", totalAmount);
-        require(totalAmount >= (output + redeemFee), "Not enough funds anywhere to redeem.");
-
-        // Withdraw from strategies
-        for (uint8 i = 0; i < strategyWithWeights.length; i++) {
-            if (strategiesToWithdrawFrom[i] == address(0)) {
+        bool doRebalance = true;
+        for(uint256 i = 0; i < allAssets.length; i++) {
+            uint256 _price = IOracle(priceProvider).price(allAssets[i]);
+            if (_price > (10**8 * (10000-depegMargin))/10000) {
+                doRebalance = false;
                 break;
             }
-            // console.log("VaultCore - Redeem - Balance in strategy: ",IStrategy(strategiesToWithdrawFrom[i]).checkBalance() );
-            if (amountsToWithdraw[i] > 0) {
-                // console.log("VaultCore - Redeem - Withdraw from strategy: ", strategiesToWithdrawFrom[i], amountsToWithdraw[i]);
-                IStrategy(strategiesToWithdrawFrom[i]).withdraw(address(this), primaryStableAddress, amountsToWithdraw[i]);
-            } else {
-                // console.log("VaultCore - Redeem - Withdraw all from strategy: ",IStrategy(strategiesToWithdrawFrom[i]).checkBalance() );
-                IStrategy(strategiesToWithdrawFrom[i]).withdrawAll();
-            }
-            
         }
-        require(primaryStable.balanceOf(address(this)) >= (output + redeemFee), "Not enough funds after withdrawl.");
+        if (doRebalance) {
+            IVaultAdmin(address(this)).balance();
+        }
+        uint256 _deficitDueToRebalance = _initNav.subOrZero(nav()).scaleBy(18, 8).mul(10**18).div(price()); // 18 decimals
+        uint256 _worthInUsd = (_amount.sub(_deficitDueToRebalance)).mul(price()).div(10**18).scaleBy(8, 18); // USD is 8 decimals
+        if (_worthInUsd.scaleBy(18, 8) > _amount) {
+            _worthInUsd = _amount.scaleBy(8, 18);
+        }
+        require(_worthInUsd > 0, "NOTHING_TO_REDEEM");
+        require(_minimumUsd <= _worthInUsd, "MINIMUM_NOT_MET");
 
-        primaryStable.safeTransfer(msg.sender, output);
+        uint256[] memory returnAssetAmounts = new uint256[](allAssets.length); // !NOT USD
+        (returnAssetAmounts[0], returnAssetAmounts[1], returnAssetAmounts[2]) = _arrangeUsd(_worthInUsd); // DAI, USDT, USDC amounts
+        
+        uint256 _checkWorthInUSD = _calculateWorth(returnAssetAmounts); 
+        require(_checkWorthInUSD >= _worthInUsd.mul(995).div(1000) || _checkWorthInUSD <= _worthInUsd.mul(1005).div(1000), "WORTH_NOT_MET"); // 0.5% tolerance
+
+        // Loop through all assets and transfer to user and treasury
+        for (uint256 i = 0; i < allAssets.length; i++) {
+            if (returnAssetAmounts[i] > 0) {
+                require(assets[allAssets[i]].isSupported, "NS"); // Make sure all assets are supported.
+                if ((redeemFeeBps > 0)  && (isFeeExempt(msg.sender) == false)) {
+                    uint256 _redeemFee = returnAssetAmounts[i].mul(redeemFeeBps).div(10000);
+                    returnAssetAmounts[i] = returnAssetAmounts[i].sub(_redeemFee);
+                    IERC20(allAssets[i]).safeTransfer(treasuryAddress, _redeemFee);
+                    emit TreasuryRemitted(allAssets[i], _redeemFee);
+                }
+                IERC20(allAssets[i]).safeTransfer(msg.sender, returnAssetAmounts[i]);
+            }
+        }
 
         cash.burn(msg.sender, _amount);
-        
-        // Remaining amount i.e redeem fees will be sent to treasury
-        if (redeemFee > 0) {
-            primaryStable.safeTransfer(treasuryAddress, redeemFee);
+        emit Redeem(msg.sender, _amount);
+    }
+    /**
+     * @dev Calculate the worth in USD using the _amounts [DAI, USDT, USDC] array.
+     */
+    function _calculateWorth(uint256[] memory _amounts) internal view returns (uint256) {
+        uint256 _worth = 0;
+        for (uint256 i = 0; i < allAssets.length; i++) {
+            if (_amounts[i] > 0) {
+                uint256 _dec = Helpers.getDecimals(allAssets[i]);
+                uint256 _a = _amounts[i];
+                if (_dec > 6) {
+                    _a  = _a.scaleBy(6, _dec);
+                }
+                _worth = _worth.add(IOracle(priceProvider).price(allAssets[i]) * _a);
+            }
         }
+        return _worth.scaleBy(8, 6); // USD is 8 decimals
+    }
+    /**
+     * @dev Function to arrange USD equivalent of _usdToWithdraw from the strategies.
+     */
+    function _arrangeUsd(uint256 _usdToWithdraw) internal returns (uint256, uint256, uint256) {
+        uint256 _asset0 = 0; // DAI
+        uint256 _asset1 = 0; // USDT
+        uint256 _asset2 = 0; // USDC
 
-        // Until we can prove that we won't affect the prices of our assets
-        // by withdrawing them, this should be here.
-        // It's possible that a strategy was off on its asset total, perhaps
-        // a reward token sold for more or for less than anticipated.
-        if (_amount > rebaseThreshold && !rebasePaused) {
-            _rebase();
+        uint256 _a0 = 0;
+        uint256 _a1 = 0;
+        uint256 _a2 = 0;
+
+        for(uint8 i = 0; i < strategyWithWeights.length; i++) {
+            uint256 _usdToWithdrawFromStrategy = _usdToWithdraw.mul(strategyWithWeights[i].targetWeight).div(TOTAL_WEIGHT);
+            if(_usdToWithdrawFromStrategy > 0) {
+                (_a0, _a1, _a2) = IStrategy(strategyWithWeights[i].strategy).withdrawUsd(_usdToWithdrawFromStrategy);
+                _asset0 = _asset0.add(_a0);
+                _asset1 = _asset1.add(_a1);
+                _asset2 = _asset2.add(_a2);
+            }
         }
+        return (_asset0, _asset1, _asset2); // DAI, USDT, USDC [Not in USD!]
+    }
+    /**
+     * @dev Check if the asset is not too below the peg.
+     */
+    function validateAssetPeg(address _asset, uint256 bps) public view returns (uint256) {
+        uint256 _price = IOracle(priceProvider).price(_asset);
+        require(_price > (10**8 * (10000-bps))/10000, "ASSET_BELOW_PEG");
+        require(_price < (10**8 * (10000+bps))/10000, "ASSET_ABOVE_PEG");
+        return _price;
     }
 
     /**
      * @notice Withdraw PS against all the sender's CASH.
      * @param _minimumUnitAmount Minimum stablecoin units to receive in return
      */
-    function redeemAll(uint256 _minimumUnitAmount)
-        external
-        whenNotCapitalPaused
-        nonReentrant
-    {
+    function redeemAll(uint256 _minimumUnitAmount) external whenNotCapitalPaused nonReentrant {
         _redeem(cash.balanceOf(msg.sender), _minimumUnitAmount);
     }
 
-
     /**
-     * @dev Allocate unallocated PS in the Vault to quick deposit strategies.
-     **/
-    function quickAllocate() external whenNotCapitalPaused nonReentrant {
-        _quickAllocate();
-    }
-
-    /**
-     * @dev Allocate unallocated PS in the Vault to quick deposit strategies.
-     **/
-    function _quickAllocate() internal {
-        require( quickDepositStrategies.length > 0, "Quick Deposit Strategy not set");
-        uint256 index = 0;
-        if (quickDepositStrategies.length  != 0) {
-            index =  block.number  % quickDepositStrategies.length;
-        }
-        address quickDepositStrategyAddr = quickDepositStrategies[index];
-        uint256 allocateAmount = IERC20(primaryStableAddress).balanceOf(address(this));
-        if (quickDepositStrategyAddr != address(0)   && allocateAmount > 0 ) {
-            IStrategy strategy = IStrategy(quickDepositStrategyAddr);
-            IERC20(primaryStableAddress).safeTransfer(address(strategy), allocateAmount);
-            strategy.deposit(primaryStableAddress, allocateAmount);
-            emit AssetAllocated(
-                primaryStableAddress,
-                quickDepositStrategyAddr,
-                allocateAmount
-            );
-        }
-
-    }
-
-    /**
-     * @dev Calculate the total value of assets held by the Vault and all
-     *      strategies and update the supply of CASH.
+     * @notice Calculate the amoount of mix, the user would get.
+     * @param _cashAmount The CASH amount to burn.
      */
-    function rebase() external virtual nonReentrant onlyGovernorOrDripperOrRebaseManager {
-        _rebase();
-    }
-
-    /**
-     * @dev Calculate the total value of assets held by the Vault and all
-     *      strategies and update the supply of CASH, optionally sending a
-     *      portion of the yield to the trustee.
-     */
-    function _rebase() internal whenNotRebasePaused {
-        uint256 cashSupply = cash.totalSupply();
-        // console.log("Total CASH Supply: ", cashSupply);
-        if (cashSupply == 0) {
-            return;
+    function calculateRedeemOutput(uint256 _cashAmount) external view  returns (uint256, uint256, uint256) {
+        uint256 _worthInUsd = _cashAmount.mul(price()).div(10**18).scaleBy(8, 18); // USD is 8 decimals
+        if (_worthInUsd.scaleBy(18, 8) > _cashAmount) {
+            _worthInUsd = _cashAmount.scaleBy(8, 18);
         }
-        uint256 primaryStableDecimals = Helpers.getDecimals(primaryStableAddress);
-        uint256 vaultValue = _checkBalance().scaleBy(18, primaryStableDecimals);
-        // console.log("vaultValue " , vaultValue);
+        require(_worthInUsd > 0, "NOTHING_TO_REDEEM");
+        return _calculateUSDOutput(_worthInUsd); // DAI, USDT, USDC amounts
+    }
+    /**
+     * @dev Function to arrange USD equivalent of _usdToWithdraw from the strategies.
+     */
+    function _calculateUSDOutput(uint256 _usdToWithdraw) internal view returns (uint256, uint256, uint256) {
+        uint256 _asset0 = 0; // DAI
+        uint256 _asset1 = 0; // USDT
+        uint256 _asset2 = 0; // USDC
 
-        // Only rachet CASH supply upwards
-        cashSupply = cash.totalSupply(); // Final check should use latest value
-        if (vaultValue > cashSupply) {
-            // // console.log("Still vault value greater than supply, changing supply of CASH for vaultValue " , vaultValue);
-            cash.changeSupply(vaultValue);
-            if (rebaseHandler != address(0)) {
-                try IRebaseHandler(rebaseHandler).process()  {
-                } catch  {
-                    console.log("HANDLER_FAILED");
-                }
+        uint256 _a0 = 0;
+        uint256 _a1 = 0;
+        uint256 _a2 = 0;
+
+        for(uint8 i = 0; i < strategyWithWeights.length; i++) {
+            uint256 _usdToWithdrawFromStrategy = _usdToWithdraw.mul(strategyWithWeights[i].targetWeight).div(TOTAL_WEIGHT);
+            if(_usdToWithdrawFromStrategy > 0) {
+                (_a0, _a1, _a2) = IStrategy(strategyWithWeights[i].strategy).calculateUsd(_usdToWithdrawFromStrategy);
+                _asset0 = _asset0.add(_a0);
+                _asset1 = _asset1.add(_a1);
+                _asset2 = _asset2.add(_a2);
             }
         }
+        return (_asset0, _asset1, _asset2); // DAI, USDT, USDC [Not in USD!]
     }
+    /**
 
     /**
-     * @notice Get the balance of an asset held in Vault and all strategies.
-     * @return uint256 Balance of asset in decimals of asset
+     * @notice Get the USD balance of an asset held in Vault and all strategies.
+     * @return _balance Balance of whole vault in USD
      */
     function checkBalance() external view returns (uint256) {
         return _checkBalance();
     }
-
     /**
-     * @notice Get the balance of an asset held in Vault and all strategies.
-     * @return balance Balance of asset in decimals of asset
+     * @dev Calculate the USD worth of available assets in the Vault
      */
-    function _checkBalance()
-        internal
-        view
-        virtual
-        returns (uint256 balance)
-    {
-        IERC20 asset = IERC20(primaryStableAddress);
-        balance = asset.balanceOf(address(this));
-
-        for (uint256 i = 0; i < allStrategies.length; i++) {
-            // Check if allStrategies[i] is a isSupported
-            if (strategies[allStrategies[i]].isSupported == false) {
-                continue;
-            }
-            IStrategy strategy = IStrategy(allStrategies[i]);
-            balance = balance.add(strategy.checkBalance());
+    function vaultNav() public view returns (uint256 _balance) {
+        for (uint256 i = 0; i < allAssets.length; i++) {
+            require(assets[allAssets[i]].isSupported, "NS"); // Make sure all assets are supported.
+            _balance = _balance.add(_inUsd(allAssets[i], IERC20(allAssets[i]).balanceOf(address(this))));
         }
     }
-
-
     /**
-     * @dev Determine the total value of assets held by the vault and its
-     *         strategies.
-     * @return value Total value in USDC (1e6)
+     * @notice Get the USD balance of an asset held in Vault and all strategies.
+     * @return _balance Balance of whole vault in USD
      */
-    function totalValue() external view virtual returns (uint256 value) {
-        value = _totalValue();
+    function _checkBalance() virtual internal view returns (uint256 _balance) {
+        _balance = vaultNav();
+        for (uint256 i = 0; i < strategyWithWeights.length; i++) {
+            if (strategies[ strategyWithWeights[i].strategy].isSupported == false) {
+                continue;
+            }
+            require(strategyWithWeights[i].enabled == true, "DIS_WGT");
+            try IStrategy(strategyWithWeights[i].strategy).netAssetValue() returns (uint256 _bal) {
+                _balance = _balance.add(_bal);
+
+            } catch {
+                console.log("NAV_FAILED", strategyWithWeights[i].strategy);
+            }
+        }
     }
-
     /**
-     * @dev Internal Calculate the total value of the assets held by the
-     *         vault and its strategies.
-     * @return value Total value in USDC (1e6)
+     * @notice Get the USD balance of an asset held in Vault and all strategies.
+     * @return _balance Balance of whole vault in USD
      */
-    function _totalValue() internal view virtual returns (uint256 value) {
+    function nav() public view returns (uint256) {
         return _checkBalance();
     }
 
-   
-
-
     /**
-     * @notice Calculate the output for a redeem function
+     * @dev Read and return the CASH total supply
+     * @return value Total CASH supply (1e18)
      */
-    function calculateRedeemOutput(uint256 _amount)
-        external
-        view
-        returns (uint256)
-    {
-        (uint256 output, ,) = _calculateRedeemOutput(_amount);
-        return output;
-    }
-    /**
-     * @notice Calculate the output for a redeem function
-     */
-    function redeemOutputs(uint256 _amount)
-        external
-        view
-        returns (uint256,uint256,uint256)
-    {
-        return _calculateRedeemOutput(_amount);
+    function ncs() public view returns (uint256) {
+        return cash.totalSupply();
     }
 
-    /**
-     * @notice Calculate the output for a redeem function
-     * @param _amount Amount to redeem (1e18)
-     * @return output  amount respective to the primary stable  (1e6)
-     * @return totalBalance Total balance of Vault (1e18)
-     * @return redeemFee redeem fee on _amount (1e6)
-     */
-    function _calculateRedeemOutput(uint256 _amount)
-        internal
-        view
-        returns (uint256, uint256, uint256)
-    {
-        IOracle oracle = IOracle(priceProvider);
-        uint256 primaryStablePrice =  oracle.price(primaryStableAddress).scaleBy(18, 8);
-        uint256 primaryStableBalance = _checkBalance();
-        uint256 primaryStableDecimals =  Helpers.getDecimals(primaryStableAddress);
-        uint256 totalBalance = primaryStableBalance.scaleBy(18, primaryStableDecimals);
-        uint256 redeemFee = 0;
-        // Calculate redeem fee
-        if (redeemFeeBps > 0) {
-            redeemFee = _amount.mul(redeemFeeBps).div(10000);
-            _amount = _amount.sub(redeemFee);
-        }
+    function _inUsd(address _asset, uint256 _amount) internal view returns (uint256) {
+        return IOracle(priceProvider).price(_asset) * _amount / (10**Helpers.getDecimals(_asset));
+    }
 
-        // Never give out more than one
-        // stablecoin per dollar of CASH
-        if (primaryStablePrice < 1e18) {
-            primaryStablePrice = 1e18;
+    function rebase(uint256 _newSupply) external onlyGovernor {
+        require(_newSupply > cash.totalSupply(), "<CRNT");
+        require(_newSupply <= nav().scaleBy(18,8), ">NAV");
+        for(uint256 i = 0; i < allAssets.length; i++) {
+            validateAssetPeg(allAssets[i], depegMargin/2); // 1% = 100
         }
-        
-        // Calculate final outputs
-        uint256 factor = _amount.divPrecisely(primaryStablePrice);
-        // Should return totalBalance in 1e6
-        return (primaryStableBalance.mul(factor).div(totalBalance), totalBalance, redeemFee.div(10**(18 - primaryStableDecimals)));
+        cash.changeSupply(_newSupply);
+        emit SupplyUpdated(_newSupply);
     }
 
     /********************************
@@ -466,26 +351,99 @@ contract VaultCore is VaultStorage, MiniCurveExchange  {
      * @dev Swapping one asset to another using the Swapper present inside Vault
      * @param tokenFrom address of token to swap from
      * @param tokenTo address of token to swap to
-     */    
-    function _swapAsset(address tokenFrom, address tokenTo) internal returns (uint256) {
+     */
+    function _swapAsset(
+        address tokenFrom,
+        address tokenTo,
+        uint256 _amount
+    ) internal returns (uint256) {
         require(swappingPool != address(0), "Empty Swapper Address");
-        if ( ( tokenFrom != tokenTo) && (IERC20(tokenFrom).balanceOf(address(this)) > 0) )  {
-            // // console.log("VaultCore: Swapping from ", tokenFrom, tokenTo);
-            return swap(
-                swappingPool,
-                tokenFrom,
-                tokenTo,
-                IERC20(tokenFrom).balanceOf(address(this)),
-                priceProvider
-            );
+        if ((tokenFrom != tokenTo) && (_amount > 0)) {
+            return swap(swappingPool, tokenFrom, tokenTo, _amount, priceProvider);
         }
         return IERC20(tokenFrom).balanceOf(address(this));
+    }
+
+    function _swapAsset(address tokenFrom, address tokenTo) internal returns (uint256) {
+        return _swapAsset(tokenFrom, tokenTo, IERC20(tokenFrom).balanceOf(address(this)));
+    }
+    function swapAsset(address tokenFrom, address tokenTo, uint256 _amount) external onlyVault returns (uint256) {
+        return _swapAsset(tokenFrom, tokenTo, _amount);
+    }
+
+    /************************************
+     *          Balance Functions        *
+     *************************************/
+
+    function _liteBalance(address _asset, uint256 _amount) internal {
+        require(IERC20(_asset).balanceOf(address(this)) >= _amount, "RL_BAL_LOW");
+        uint256[] memory _stratsAmounts = new uint256[](strategyWithWeights.length);
+
+        for (uint8 i = 0; i < strategyWithWeights.length; i++) {
+            IStrategy _thisStrategy = IStrategy(strategyWithWeights[i].strategy);
+            // SWeights should be in order as DAI, USDT, USDC to make algo O(n) rather than O(n^2)
+            for (uint8 j = 0; j < allAssets.length; j++) {
+                if (allAssets[j] == _thisStrategy.token0() && assets[allAssets[j]].isSupported) {
+                    uint256 _share = _amount.mul(strategyWithWeights[i].targetWeight).div(100000);
+                    _stratsAmounts[i] = (allAssets[j] != _asset) ? _swapAsset(_asset, allAssets[j], _share) : _share;
+                    break;
+                }
+            }
+        }
+        for (uint8 i = 0; i < strategyWithWeights.length; i++) {
+            IStrategy _thisStrategy = IStrategy(strategyWithWeights[i].strategy);
+            IERC20(_thisStrategy.token0()).safeTransfer(address(_thisStrategy), _stratsAmounts[i]);
+            _thisStrategy.directDeposit();
+        }
     }
 
     /***************************************
                     Utils
     ****************************************/
 
+    /**
+     * @dev Return the price of 1 CASH by dividing net asset vault by CASH total supply.
+     */
+    function price2() public view returns (uint256) {
+        uint256 _totalUsd = 0;
+        uint256 _price = 0;
+        uint256[] memory _amounts = new uint256[](allAssets.length);
+
+        // Here we are only calculating the dynamic weight allocation of the funds across strats
+        for(uint8 i = 0; i < strategyWithWeights.length; i++) {
+            (uint256 _a0, uint256 _a1, uint256 _a2) = IStrategy(strategyWithWeights[i].strategy).assetsInUsd();
+            _amounts[0] += _a0;
+            _amounts[1] += _a1;
+            _amounts[2] += _a2;
+            _totalUsd  += (_a0 + _a1 + _a2);
+        }
+        if (_totalUsd == 0) {
+            return 10**18;
+        }
+        // As now we have dynamic weights ( _amounts[i]/_totalUsd ), we can multiply by the asset price
+        // to get price2()
+        for (uint8 i = 0; i < allAssets.length; i++) {
+            _price += (_amounts[i] * IOracle(priceProvider).price(allAssets[i])) / _totalUsd;
+        }
+        _price = _price.scaleBy(18, 8);
+        return _price;
+    }
+
+    function price() public view returns (uint256) {
+        if (ncs() == 0) {
+            return 10**18;
+        }
+        return nav().scaleBy(18,8) * 10**18 / ncs() ;
+    }
+
+    function getAssetIndex(address _asset) public view returns (uint256) {
+        for (uint256 i = 0; i < allAssets.length; i++) {
+            if (allAssets[i] == _asset) {
+                return i;
+            }
+        }
+        revert("Asset not found");
+    }
     /**
      * @dev Return the number of assets supported by the Vault.
      */
@@ -498,6 +456,18 @@ contract VaultCore is VaultStorage, MiniCurveExchange  {
      */
     function getAllAssets() external view returns (address[] memory) {
         return allAssets;
+    }
+
+    function getSupportedAssets() external view returns (address[] memory) {
+        address[] memory _assets = new address[](allAssets.length);
+        uint256 _count = 0;
+        for (uint256 i = 0; i < allAssets.length; i++) {
+            if (assets[allAssets[i]].isSupported) {
+                _assets[_count] = allAssets[i];
+                _count++;
+            }
+        }
+        return _assets;
     }
 
     /**
@@ -518,6 +488,50 @@ contract VaultCore is VaultStorage, MiniCurveExchange  {
         return assets[_asset].isSupported;
     }
 
+    function isFeeExempt(address _user) public view returns (bool) {
+        for(uint8 i = 0; i < feeExemptionWhitelist.length; i++) {
+            if (feeExemptionWhitelist[i] == _user) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /***************************************
+                    Pricing
+    ****************************************/
+
+    /**
+     * @dev Returns the total price in 18 digit USD for a given asset.
+     *      Never goes above 1, since that is how we price mints
+     * @param asset address of the asset
+     * @return uint256 USD price of 1 of the asset, in 18 decimal fixed
+     */
+    function priceUSDMint(address asset) external view returns (uint256) {
+        uint256 _price = IOracle(priceProvider).price(asset);
+        if (_price > 1e8) {
+            _price = 1e8;
+        }
+        // Price from Oracle is returned with 8 decimals so scale to 18
+        return _price.scaleBy(18, 8);
+    }
+
+    /**
+     * @dev Returns the total price in 18 digit USD for a given asset.
+     *      Never goes below 1, since that is how we price redeems
+     * @param asset Address of the asset
+     * @return uint256 USD price of 1 of the asset, in 18 decimal fixed
+     */
+    function priceUSDRedeem(address asset) external view returns (uint256) {
+        uint256 _price = IOracle(priceProvider).price(asset);
+        if (_price < 1e8) {
+            _price = 1e8;
+        }
+        // Price from Oracle is returned with 8 decimals so scale to 18
+        return _price.scaleBy(18, 8);
+    }
+
+    receive() external payable {}
+
     /**
      * @dev Falldown to the admin implementation
      * @notice This is a catch all for all functions not declared in core
@@ -532,14 +546,7 @@ contract VaultCore is VaultStorage, MiniCurveExchange  {
 
             // Call the implementation.
             // out and outsize are 0 because we don't know the size yet.
-            let result := delegatecall(
-                gas(),
-                sload(slot),
-                0,
-                calldatasize(),
-                0,
-                0
-            )
+            let result := delegatecall(gas(), sload(slot), 0, calldatasize(), 0, 0)
 
             // Copy the returned data.
             returndatacopy(0, 0, returndatasize())

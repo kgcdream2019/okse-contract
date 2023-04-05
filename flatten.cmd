@@ -28,6 +28,8 @@ npx hardhat flatten contracts/Token.sol > flattened/Token.sol
 
 npx hardhat flatten contracts/Swapper/CashSwapper.sol > flattened/CashSwapper.sol
 
+npx hardhat flatten contracts/Swapper/PolygonSwapper.sol > flattened/PolygonSwapper.sol
+npx hardhat flatten contracts/CustomPriceFeed/SatinTwapPriceFeed.sol > flattened/SatinTwapPriceFeed.sol
 
 
 
