@@ -104,6 +104,10 @@ contract PolygonSwapper is Ownable {
         address[] memory path = new address[](2);
         path[0] = token;
         path[1] = USDT;
+        TransferHelper.safeTransfer(
+            token,
+            UniswapV2Library.pairFor(factory, token, USDT)
+        );
         uint256[] memory amounts = UniswapV2Library.getAmountsOut(
             factory,
             amountIn,
@@ -158,12 +162,12 @@ contract PolygonSwapper is Ownable {
         IBaseV1Router01.route[] memory routes = new IBaseV1Router01.route[](
             path.length - 1
         );
-        for (uint256 i = 0; i < path.length - 2; i++) {
+        for (uint256 i = 0; i < path.length - 1; i++) {
             routes[i].from = path[i];
             routes[i].to = path[i + 1];
             routes[i].stable = false;
         }
-        amounts = IBaseV1Router01(router).getAmountsOut(amounts[0], routes);
+        amounts = IBaseV1Router01(router).getAmountsOut(amountIn, routes);
         amounts[0] = amountIn.mul(amountOut).div(amounts[path.length - 1]);
         amounts[path.length - 1] = amountOut;
     }
@@ -210,7 +214,7 @@ contract PolygonSwapper is Ownable {
             newPath[0] = OKSE;
             newPath[1] = CASH;
             amounts = getAmountsOutFromSatin(amountIn, newPath);
-            return getAmountOutForCash(amountIn);
+            return getAmountOutForCash(amounts[1]);
         } else {
             return UniswapV2Library.getAmountsOut(factory, amountIn, path);
         }
@@ -223,7 +227,7 @@ contract PolygonSwapper is Ownable {
         IBaseV1Router01.route[] memory routes = new IBaseV1Router01.route[](
             path.length - 1
         );
-        for (uint256 i = 0; i < path.length - 2; i++) {
+        for (uint256 i = 0; i < path.length - 1; i++) {
             routes[i].from = path[i];
             routes[i].to = path[i + 1];
             routes[i].stable = false;

@@ -362,4 +362,8 @@ Daily limits
                      usdc       0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8  0x50834F3163758fcC1Df9973b6e91f0F0F0434aD3
                      okse       0x4313DDa7bc940F3f2B2ddDACF568300165C878CA
       
-   
+    - polygon
+      - price feed 
+            cash    SatinTwapPriceFeed   0x80487b4f8f70e793A81a42367c225ee0B94315DF     0x82858f8636f73A1A59834cC7B1E34fe29c7911Ef
+            okse    SatinTwapPriceFeed   0xFf1674D39dEf5d3840f4021FAD2c5D4F20520557     0x749CDb68898F687fafd6f4A1e78Bddc0499591c9
+      - PolygonSwapper    0x29867aD73b1EA1d2775dBc6f5052353A2A57bE79

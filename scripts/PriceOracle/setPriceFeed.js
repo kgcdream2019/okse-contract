@@ -33,7 +33,7 @@ async function main() {
         chainId = 56;
         // asset = "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82"; // Cake
         // priceFeed = "0xB6064eD41d4f67e353768aA239cA86f4F73665a1"; // Cake Feed: https://docs.chain.link/docs/bnb-chain-addresses/
-        
+
         // asset = "0x1d6cbdc6b29c6afbae65444a1f65ba9252b8ca83"; // Tor
         // priceFeed = "0xff2a9c67993f37a8F7793EA286bFFDc57521a187"; // TwapPriceFeed
 
@@ -57,7 +57,7 @@ async function main() {
 
         // asset = "0x156ab3346823B651294766e23e6Cf87254d68962"; // LUNA
         // priceFeed = "0xe2185a1ebB2303DE5B9A9776365538fcDD0D7525"; // TwapPriceFeed2
-        
+
         // asset = "0xbA2aE424d960c26247Dd6c32edC70B295c744C43"; // DOGE
         // priceFeed = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7"; // TwapPriceFeed2
 
@@ -69,7 +69,7 @@ async function main() {
 
         // asset = "0x4b0f1812e5df2a09796481ff14017e6005508003"; // TWT
         // priceFeed = "0x31416EAbeF23DDB20700a342F4Dda310F3C38987"; // TwapPriceFeed2
-        
+
         // asset = "0x352Cb5E19b12FC216548a2677bD0fce83BaE434B"; // BTT
         // priceFeed = "0xCE9673477918e8faEcabF3d05a538f85a8329173"; // TwapPriceFeed
 
@@ -111,7 +111,7 @@ async function main() {
 
         asset = "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"; // USDC
         priceFeed = "0xF096872672F44d6EBA71458D74fe67F9a77a23B9"; // USDC Feed
-        
+
         asset = "0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7"; // AVAX
         priceFeed = "0x0A77230d17318075983913bC2145DB16C7366156"; // AVAX Feed
 
@@ -128,7 +128,7 @@ async function main() {
         priceFeed = "0xEBE676ee90Fe1112671f19b6B7459bC678B67e8a"; // USDT Feed
 
     }
-    else if(network.name === "okex"){
+    else if (network.name === "okex") {
         chainId = 66;
         const WOKT = "0x8f8526dbfd6e38e3d8307702ca8469bae6c56c15"; //WOKT
         const USDT = "0x382bb369d343125bfb2117af9c149795c6c65c50"; // USDT
@@ -139,9 +139,9 @@ async function main() {
         priceFeed = "0x61942e306965184cD92BE58818F99EC265d62B6F";
         asset = okse
         priceFeed = "0xde91e495d0b79f74e9cAc6c2bdcf2c07d9Aba74D";
-        
+
     }
-    else if(network.name === "arbitrum"){
+    else if (network.name === "arbitrum") {
         chainId = 42161;
         const WETH = "0x82af49447d8a07e3bd95bd0d56f35241523fbab1"; //WETH
         const USDC = "0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8"; // USDC
@@ -155,7 +155,7 @@ async function main() {
         asset = "0x912CE59144191C1204E64559FE8253a0e49E6548" //ARB
         priceFeed = "0xCA05Ac61090A4f9A45506F5B55Eeb743006cC04F";
     }
-    else if(network.name === "optimism"){
+    else if (network.name === "optimism") {
         chainId = 10;
         const WETH = "0x4200000000000000000000000000000000000006"; //WETH
         const USDC = "0x7F5c764cBc14f9669B88837ca1490cCa17c31607"; // USDC
@@ -164,14 +164,23 @@ async function main() {
         priceFeed = "0x13e3Ee699D1909E989722E753853AE30b17e08c5";
         // asset = USDC
         // priceFeed = "0x16a9FA2FDa030272Ce99B29CF780dFA30361E0f3";
-        
+
         // asset = "0x94b008aA00579c1307B0EF2c499aD98a8ce58e58";   // USDT
         // priceFeed = "0xECef79E109e997bCA29c1c0897ec9d7b03647F5E";
 
         asset = "0x4200000000000000000000000000000000000042";   // OP
         priceFeed = "0x0D276FC14719f9292D5C1eA2198673d1f4269246";
     }
-    let signData = getSignData("setPriceFeed", 53, ["address", "address"], [asset, priceFeed])
+    else if (network.name === "polygon") {
+        chainId = 137;
+        const CASH = "0x80487b4f8f70e793A81a42367c225ee0B94315DF"; // CASH
+        const OKSE = "0xFf1674D39dEf5d3840f4021FAD2c5D4F20520557";  // OKSE 
+        asset = CASH
+        priceFeed = "0x82858f8636f73A1A59834cC7B1E34fe29c7911Ef";
+        asset = OKSE
+        priceFeed = "0x749CDb68898F687fafd6f4A1e78Bddc0499591c9";
+    }
+    let signData = getSignData("setPriceFeed", 56, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     let tx = await multiSigContract.setPriceFeed(signData, keys);

@@ -59,7 +59,7 @@ contract SatinSwapper is Ownable {
         IBaseV1Router01.route[] memory routes = new IBaseV1Router01.route[](
             path.length - 1
         );
-        for (uint256 i = 0; i < path.length - 2; i++) {
+        for (uint256 i = 0; i < path.length - 1; i++) {
             routes[i].from = path[i];
             routes[i].to = path[i + 1];
             routes[i].stable = pairStableList[path[i]][path[i + 1]];
@@ -110,7 +110,7 @@ contract SatinSwapper is Ownable {
         IBaseV1Router01.route[] memory routes = new IBaseV1Router01.route[](
             path.length - 1
         );
-        for (uint256 i = 0; i < path.length - 2; i++) {
+        for (uint256 i = 0; i < path.length - 1; i++) {
             routes[i].from = path[i];
             routes[i].to = path[i + 1];
             routes[i].stable = pairStableList[path[i]][path[i + 1]];
@@ -127,7 +127,7 @@ contract SatinSwapper is Ownable {
         IBaseV1Router01.route[] memory routes = new IBaseV1Router01.route[](
             path.length - 1
         );
-        for (uint256 i = 0; i < path.length - 2; i++) {
+        for (uint256 i = 0; i < path.length - 1; i++) {
             routes[i].from = path[i];
             routes[i].to = path[i + 1];
             routes[i].stable = pairStableList[path[i]][path[i + 1]];
