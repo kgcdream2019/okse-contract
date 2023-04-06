@@ -8,6 +8,7 @@ import "../interfaces/IVault.sol";
 import "../libraries/SafeMath.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "../Swapper/satin/interfaces/IBaseV1Router01.sol";
+import "../Swapper/satin/interfaces/IStableSwap.sol";
 
 contract SatinTwapPriceFeed is AggregatorV3Interface, Ownable {
     using SafeMath for uint256;
@@ -16,6 +17,7 @@ contract SatinTwapPriceFeed is AggregatorV3Interface, Ownable {
     address public CASH = 0x80487b4f8f70e793A81a42367c225ee0B94315DF; // CASH
     address public OKSE = 0xFf1674D39dEf5d3840f4021FAD2c5D4F20520557;
     address public vault = 0xd1bb7d35db39954d43e16f65F09DD0766A772cFF; // CASH vault
+    address public stableswap = 0x3789e9AbCe84484FDb5C337c8E44B24eABBa331a; // 4 POOL for stable swap
     bool public stable;
     uint256 public testAmountsIn;
     uint8 _decimals;

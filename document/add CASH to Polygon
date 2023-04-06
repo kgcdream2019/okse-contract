@@ -1,0 +1,14 @@
+1) deploy PolygonSwapper    0xD8F876DCB1FeCb1419d1CCEF0C6D8f0582bA3539
+2) price oracle 
+    OKSE    0x749CDb68898F687fafd6f4A1e78Bddc0499591c9
+    CASH    0x82858f8636f73A1A59834cC7B1E34fe29c7911Ef
+3) add market
+    marketmanager 0x80487b4f8f70e793A81a42367c225ee0B94315DF
+4) update PolygonSwapper
+    OkseCard   setContractAddress  update new swapper
+            priceOracle   0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7
+            swapper       0xD8F876DCB1FeCb1419d1CCEF0C6D8f0582bA3539
+            limitManager  0xfA3E7d864cf426381aF1A990FD2E19d56b03dF33
+            levelManager  0xC23CF0AB5A879052b81f3fa5E398F969Fc0AE433
+            marketManager 0x33fb5277D65Eaf00c88bA279e502805f5ac8bb88
+            cashbackManager 0xA1AD368Cfb884F499F1379Ac51FF57424fA07C90
