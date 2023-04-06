@@ -8,12 +8,14 @@ import "./quickswap/interfaces/IUniswapV2Pair.sol";
 import "./quickswap/libraries/UniswapV2Library.sol";
 import "./satin/interfaces/IBasePair.sol";
 import "./satin/interfaces/IBaseV1Router01.sol";
+import "./satin/interfaces/IStableSwap.sol";
 import "../interfaces/PriceOracle.sol";
 import "../interfaces/IVault.sol";
 
 contract PolygonSwapper is Ownable {
     using SafeMath for uint256;
     address public vault = 0xd1bb7d35db39954d43e16f65F09DD0766A772cFF; // CASH vault
+    address public stableswap = 0x3789e9AbCe84484FDb5C337c8E44B24eABBa331a; // 4 POOL for stable swap
     address public factory = 0x5757371414417b8C6CAad45bAeF941aBc7d3Ab32; // quickswap factory
 
     address public CASH = 0x80487b4f8f70e793A81a42367c225ee0B94315DF; // CASH
@@ -50,7 +52,7 @@ contract PolygonSwapper is Ownable {
         }
     }
 
-    function swapCash(address _to) public {
+    function swapCashUsingVault(address _to) public {
         // redeem
         uint256 _amount = ERC20Interface(CASH).balanceOf(address(this));
         uint256 _minimumUnitAmount = 0;
@@ -63,7 +65,32 @@ contract PolygonSwapper is Ownable {
         TransferHelper.safeTransfer(USDT, _to, usdtBalance);
     }
 
-    function swapOkse(address _to) public {
+    function swapCash(address _to) internal {
+        // redeem
+        uint256 _amount = ERC20Interface(CASH).balanceOf(address(this));
+
+        TransferHelper.safeApprove(CASH, stableswap, _amount);
+        uint8 tokenIndexFrom = IStableSwap(stableswap).getTokenIndex(CASH);
+        uint8 tokenIndexTo = IStableSwap(stableswap).getTokenIndex(USDT);
+        uint256 minDy = IStableSwap(stableswap).calculateSwap(
+            tokenIndexFrom,
+            tokenIndexTo,
+            _amount
+        );
+        minDy = minDy.sub(minDy.mul(slippage).div(SLIPPAGE_MAX));
+        uint256 deadline = block.timestamp;
+        IStableSwap(stableswap).swap(
+            tokenIndexFrom,
+            tokenIndexTo,
+            _amount,
+            minDy,
+            deadline
+        );
+        uint256 usdtBalance = ERC20Interface(USDT).balanceOf(address(this));
+        TransferHelper.safeTransfer(USDT, _to, usdtBalance);
+    }
+
+    function swapOkse(address _to) internal {
         uint256 amountIn = ERC20Interface(OKSE).balanceOf(address(this));
         TransferHelper.safeApprove(OKSE, address(router), amountIn);
         IBaseV1Router01(router).swapExactTokensForTokensSimple(
@@ -82,7 +109,7 @@ contract PolygonSwapper is Ownable {
         uint256[] memory amounts,
         address[] memory path,
         address _to
-    ) public {
+    ) internal {
         for (uint256 i; i < path.length - 1; i++) {
             (address input, address output) = (path[i], path[i + 1]);
             (address token0, ) = UniswapV2Library.sortTokens(input, output);
@@ -98,7 +125,7 @@ contract PolygonSwapper is Ownable {
         }
     }
 
-    function convertToUsdt(address token, address _to) public {
+    function convertToUsdt(address token, address _to) internal {
         uint256 amountIn = ERC20Interface(token).balanceOf(address(this));
         if (amountIn == 0) return;
         address[] memory path = new address[](2);
@@ -106,7 +133,8 @@ contract PolygonSwapper is Ownable {
         path[1] = USDT;
         TransferHelper.safeTransfer(
             token,
-            UniswapV2Library.pairFor(factory, token, USDT)
+            UniswapV2Library.pairFor(factory, token, USDT),
+            amountIn
         );
         uint256[] memory amounts = UniswapV2Library.getAmountsOut(
             factory,
@@ -257,17 +285,6 @@ contract PolygonSwapper is Ownable {
             path = new address[](2);
             path[0] = token0;
             path[1] = token1;
-        }
-    }
-
-    function withdrawTokens(address token, address to) public onlyOwner {
-        uint256 amount;
-        if (token == address(0)) {
-            amount = address(this).balance;
-            TransferHelper.safeTransferETH(to, amount);
-        } else {
-            amount = ERC20Interface(token).balanceOf(address(this));
-            TransferHelper.safeTransfer(token, to, amount);
         }
     }
 
