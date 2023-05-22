@@ -27,7 +27,7 @@ contract PolygonSwapper is Ownable {
 
     address public router = 0x1Bc01517Bda7135B00d629B61DCe41F7AF070C53; // Satin router
 
-    uint256 slippage = 3000;
+    uint256 slippage = 30000;
     uint256 public constant SLIPPAGE_MAX = 1000000;
     address public priceOracle = 0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7;
     mapping(address => address) public middleTokenList;
@@ -152,7 +152,15 @@ contract PolygonSwapper is Ownable {
         uint256 cashPrice = IVault(vault).price();
         require(cashPrice > 0, "cash price error");
         uint256 amountIn = amountOut.mul(10 ** 30).div(cashPrice);
-        amounts[0] = amountIn;
+        uint8 tokenIndexFrom = IStableSwap(stableswap).getTokenIndex(CASH);
+        uint8 tokenIndexTo = IStableSwap(stableswap).getTokenIndex(USDT);
+        uint256 calcAmountOut = IStableSwap(stableswap).calculateSwap(
+            tokenIndexFrom,
+            tokenIndexTo,
+            amountIn
+        );
+        require(calcAmountOut > 0, "div by zero");
+        amounts[0] = amountIn.mul(amountOut).div(calcAmountOut);
         amounts[1] = amountOut;
     }
 
@@ -225,8 +233,14 @@ contract PolygonSwapper is Ownable {
         uint256 amountIn
     ) public view returns (uint256[] memory amounts) {
         amounts = new uint256[](2);
-        uint256 cashPrice = IVault(vault).price();
-        uint256 amountOut = amountIn.mul(cashPrice).div(10 ** 30);
+        uint8 tokenIndexFrom = IStableSwap(stableswap).getTokenIndex(CASH);
+        uint8 tokenIndexTo = IStableSwap(stableswap).getTokenIndex(USDT);
+        uint256 amountOut = IStableSwap(stableswap).calculateSwap(
+            tokenIndexFrom,
+            tokenIndexTo,
+            amountIn
+        );
+
         amounts[0] = amountIn;
         amounts[1] = amountOut;
     }

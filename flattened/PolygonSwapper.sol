@@ -99,6 +99,7 @@ interface ERC20Interface {
 
 // File @openzeppelin/contracts/utils/Context.sol@v3.4.2
 
+// -License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -126,6 +127,7 @@ abstract contract Context {
 
 // File @openzeppelin/contracts/access/Ownable.sol@v3.4.2
 
+// -License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -196,6 +198,7 @@ abstract contract Ownable is Context {
 
 // File @openzeppelin/contracts/token/ERC20/IERC20.sol@v3.4.2
 
+// -License-Identifier: MIT
 
 pragma solidity >=0.6.0 <0.8.0;
 
@@ -276,6 +279,7 @@ interface IERC20 {
 
 // File contracts/libraries/TransferHelper.sol
 
+// -License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.6.0;
 
 library TransferHelper {
@@ -519,6 +523,7 @@ library UniswapV2Library {
 
 // File contracts/Swapper/satin/interfaces/IBasePair.sol
 
+//-License-Identifier: LICENSED
 pragma solidity ^0.7.0;
 interface IBaseV1Pair {
     function transferFrom(address src, address dst, uint amount) external returns (bool);
@@ -534,6 +539,7 @@ interface IBaseV1Pair {
 
 // File contracts/Swapper/satin/interfaces/IBaseV1Router01.sol
 
+//-License-Identifier: LICENSED
 pragma solidity ^0.7.0;
 pragma abicoder v2;
 interface IBaseV1Router01 {
@@ -621,6 +627,7 @@ interface IBaseV1Router01 {
 
 // File contracts/Swapper/satin/interfaces/IStableSwap.sol
 
+// -License-Identifier: MIT
 pragma solidity ^0.7.0;
 /**
  * @title Swap - A StableSwap implementation in solidity.
@@ -742,6 +749,7 @@ interface IStableSwap {
 
 // File contracts/interfaces/PriceOracle.sol
 
+//-License-Identifier: UNLICENSED
 pragma solidity ^0.7.0;
 
 abstract contract PriceOracle {
@@ -761,6 +769,7 @@ abstract contract PriceOracle {
 
 // File contracts/interfaces/IVault.sol
 
+// -License-Identifier: LICENSED
 pragma solidity ^0.7.0;
 
 interface IVault {
@@ -780,7 +789,9 @@ interface IVault {
 
 // File contracts/Swapper/PolygonSwapper.sol
 
+//-License-Identifier: LICENSED
 pragma solidity ^0.7.0;
+pragma abicoder v2;
 contract PolygonSwapper is Ownable {
     using SafeMath for uint256;
     address public vault = 0xd1bb7d35db39954d43e16f65F09DD0766A772cFF; // CASH vault
@@ -796,7 +807,7 @@ contract PolygonSwapper is Ownable {
 
     address public router = 0x1Bc01517Bda7135B00d629B61DCe41F7AF070C53; // Satin router
 
-    uint256 slippage = 3000;
+    uint256 slippage = 30000;
     uint256 public constant SLIPPAGE_MAX = 1000000;
     address public priceOracle = 0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7;
     mapping(address => address) public middleTokenList;
@@ -921,7 +932,15 @@ contract PolygonSwapper is Ownable {
         uint256 cashPrice = IVault(vault).price();
         require(cashPrice > 0, "cash price error");
         uint256 amountIn = amountOut.mul(10 ** 30).div(cashPrice);
-        amounts[0] = amountIn;
+        uint8 tokenIndexFrom = IStableSwap(stableswap).getTokenIndex(CASH);
+        uint8 tokenIndexTo = IStableSwap(stableswap).getTokenIndex(USDT);
+        uint256 calcAmountOut = IStableSwap(stableswap).calculateSwap(
+            tokenIndexFrom,
+            tokenIndexTo,
+            amountIn
+        );
+        require(calcAmountOut > 0, "div by zero");
+        amounts[0] = amountIn.mul(amountOut).div(calcAmountOut);
         amounts[1] = amountOut;
     }
 
@@ -994,8 +1013,14 @@ contract PolygonSwapper is Ownable {
         uint256 amountIn
     ) public view returns (uint256[] memory amounts) {
         amounts = new uint256[](2);
-        uint256 cashPrice = IVault(vault).price();
-        uint256 amountOut = amountIn.mul(cashPrice).div(10 ** 30);
+        uint8 tokenIndexFrom = IStableSwap(stableswap).getTokenIndex(CASH);
+        uint8 tokenIndexTo = IStableSwap(stableswap).getTokenIndex(USDT);
+        uint256 amountOut = IStableSwap(stableswap).calculateSwap(
+            tokenIndexFrom,
+            tokenIndexTo,
+            amountIn
+        );
+
         amounts[0] = amountIn;
         amounts[1] = amountOut;
     }

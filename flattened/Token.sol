@@ -637,7 +637,7 @@ contract ERC20 is Context, IERC20 {
 
 pragma solidity ^0.7.0;
 contract Token is ERC20{
-    constructor() ERC20("Token", "TOKEN"){
-        _mint(msg.sender,1000000000*10**18);
+    constructor() ERC20("9GAG", "9GAG"){
+        _mint(msg.sender,420690000000000*10**18);
     }
 }

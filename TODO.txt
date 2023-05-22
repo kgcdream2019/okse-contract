@@ -1,0 +1,3 @@
+1. update price oracle for bsc chain  priceefeed  usdc -> USDT, middle token WBNB -> WBNB, BUSD
+2. fix polygon cash topup error 
+    this is example tx https://polygonscan.com/tx/0x283a81c8f64c72fa8a8630938d522745e6fdd72cbbcb2f03c08b1dafd9bc5461
