@@ -7,6 +7,9 @@ import 'hardhat-deploy'
 import { resolve } from 'path'
 import { config as dotenvConfig } from 'dotenv'
 dotenvConfig({ path: resolve(__dirname, './.env') })
+import "@matterlabs/hardhat-zksync-solc";
+import "zksync-web3";
+import "@matterlabs/hardhat-zksync-verify";
 
 const LOW_OPTIMIZER_COMPILER_SETTINGS = {
   version: '0.7.6',
@@ -48,6 +51,16 @@ const DEFAULT_COMPILER_SETTINGS = {
 }
 
 export default {
+  zksolc: {
+    version: '1.3.10',
+    compilerSource: 'binary',
+    settings: {
+      isSystem: true,
+      optimizer: {
+        enabled: true
+      }
+    }
+  },
   networks: {
     hardhat: {
       allowUnlimitedContractSize: false,
@@ -104,6 +117,18 @@ export default {
       url: `https://mainnet.optimism.io`,
       accounts: [`${process.env.PRIVATE_KEY}`],
     },
+    zksyncTestnet: {
+      url: 'https://testnet.era.zksync.dev',
+      accounts: [`${process.env.PRIVATE_KEY}`],
+      zksync: true,
+      verifyURL: 'https://zksync2-testnet-explorer.zksync.dev/contract_verification'
+    },
+    zksyncMainnet: {
+      url: 'https://zksync2-mainnet.zksync.io',
+      accounts: [`${process.env.PRIVATE_KEY}`],
+      zksync: true,
+      verifyURL: 'https://zksync2-mainnet-explorer.zksync.io/contract_verification'
+    }
   },
   etherscan: {
     // Your API key for Etherscan
