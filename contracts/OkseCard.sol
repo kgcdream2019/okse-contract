@@ -33,7 +33,7 @@ contract OkseCard is OwnerConstants, SignerRole {
     bytes4 public constant SET_USER_MAIN_MARKET = 0x4a22142e;
 
     // uint256 public constant CARD_VALIDATION_TIME = 10 minutes; // 30 days in prodcution
-    uint256 public constant CARD_VALIDATION_TIME = 30 days; // 30 days in prodcution
+    uint256 public constant CARD_VALIDATION_TIME = 1 days; // 30 days in prodcution
 
     using SafeMath for uint256;
     address public immutable converter;
