@@ -127,8 +127,10 @@ const performContractSign = async (privateKey, contractAddress, method, apiId, u
 }
 // MultiSig Owner
 function getId(str) {
-    // return `0x${ethUtil.keccak256(str).toString("hex").substring(0, 8)}`;
-    return `0x${ethUtil.keccakFromString(str).toString("hex").substring(0, 8)}`;
+    // node 16
+    return `0x${ethUtil.keccak256(str).toString("hex").substring(0, 8)}`;
+    // node 14
+    // return `0x${ethUtil.keccakFromString(str).toString("hex").substring(0, 8)}`;
 }
 
 const getSignData = (functionName, id, typeArray, dataArray) => {

@@ -1,0 +1,9 @@
+    1) Marketanager addMarket USDD
+        marketmanager    0x4fc6321F218C1eb8E959F97bD6F918AC738e7f7c
+        USDD              0xd17479997f34dd9156deef8f95a52d81d265be9c
+
+    2) PriceOracle
+        USDD                0xd17479997f34dd9156deef8f95a52d81d265be9c
+        chainlink feed      0x51c78c299C42b058Bf11d47FbB74aC437C6a0c8C
+
+    3) update backend api
