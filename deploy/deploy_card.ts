@@ -2,6 +2,8 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts, network, ethers } = hre;
+  const chainId = parseInt(await hre.getChainId(), 10);
+  const skipIfAlreadyDeployed = chainId === 324 || chainId === 280
   async function initializeOwners(
     contractName: string,
     contractAddress: string,
@@ -30,17 +32,18 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   let _owners = [
     "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b",
     "0xC533335b07e4E6B79763AAa65D45AF2c0606a016",
-    "0x3Cdf6195e83a61e9D1842c70707e7B2fe10D2793"
+    "0x3Cdf6195e83a61e9D1842c70707e7B2fe10D2793",
   ];
   let _ownersForPriceOracle = [
     "0xba6BA085F0B6BE8f8A2D0f5a4F450c407fDC5aa4",
     "0x11314C0b1bB3844eB43fF05D1E877d36cC1A134b",
-    "0x09b2aFF4A268E40EdC9D3A0695339c3E9B84df9e"
+    "0x09b2aFF4A268E40EdC9D3A0695339c3E9B84df9e",
   ];
   const oksecardPriceOracle = await deploy("OkseCardPriceOracle", {
     from: deployer,
     args: [],
     log: true,
+    skipIfAlreadyDeployed
   });
   await initializeOwners(
     "OkseCardPriceOracle",
@@ -136,17 +139,22 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     _WETH = "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91"; // WETH
     USDT = "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4"; // USDC
     okse = "0x8483bf6d5E45e467f2979c5d51B76100AAB60294"; // OKSE
-    const router = "0xE592427A0AEce92De3Edee1F18E0157C05861564"; // uniswap v3 router 02
-    swapper = await deploy("UniswapV3Swapper", {
+    const classicFactory = "0xf2DAd89f2788a8CD54625C60b55cD3d2D0ACa7Cb"; // cherryswap factory
+    const stableFactory = "0x5b9f21d407F35b10CbfDDca17D5D84b129356ea3"; // cherryswap factory
+    const vault = "0x621425a1Ef6abE91058E9712575dcc4258F8d091"; // cherryswap factory
+
+    swapper = await deploy("SyncSwapper", {
       from: deployer,
-      args: [router, oksecardPriceOracle.address, _WETH, USDT],
+      args: [classicFactory, stableFactory, vault],
       log: true,
+      skipIfAlreadyDeployed
     });
   }
   const Converter_Implementation = await deploy("Converter", {
     from: deployer,
     args: [],
     log: true,
+    skipIfAlreadyDeployed
   });
 
   const signer = "0x5126EA3894671E1c6cce47D3fB462E3C270e499e";
@@ -176,6 +184,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [Converter_Implementation.address, signer],
     log: true,
+    skipIfAlreadyDeployed
   });
   await initializeOwners("OkseCard", OkseCard_Implementation.address, _owners);
   const okseCardAddress = OkseCard_Implementation.address;
@@ -184,6 +193,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [okseCardAddress],
     log: true,
+    skipIfAlreadyDeployed
   });
   await initializeOwners(
     "LevelManager",
@@ -195,6 +205,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [okseCardAddress, LevelManager_Implementation.address],
     log: true,
+    skipIfAlreadyDeployed
   });
   await initializeOwners(
     "LimitManager",
@@ -212,6 +223,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       Converter_Implementation.address,
     ],
     log: true,
+    skipIfAlreadyDeployed
   });
   await initializeOwners(
     "MarketManager",
@@ -223,6 +235,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     from: deployer,
     args: [okseCardAddress],
     log: true,
+    skipIfAlreadyDeployed
   });
   await initializeOwners(
     "CashBackManager",
