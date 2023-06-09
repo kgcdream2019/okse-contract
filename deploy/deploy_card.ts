@@ -132,6 +132,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       log: true,
     });
   }
+  if (network.name === "zksyncMainnet") {
+    _WETH = "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91"; // WETH
+    USDT = "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4"; // USDC
+    okse = "0x8483bf6d5E45e467f2979c5d51B76100AAB60294"; // OKSE
+    const router = "0xE592427A0AEce92De3Edee1F18E0157C05861564"; // uniswap v3 router 02
+    swapper = await deploy("UniswapV3Swapper", {
+      from: deployer,
+      args: [router, oksecardPriceOracle.address, _WETH, USDT],
+      log: true,
+    });
+  }
   const Converter_Implementation = await deploy("Converter", {
     from: deployer,
     args: [],

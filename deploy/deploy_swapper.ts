@@ -46,6 +46,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       log: true,
     });
   }
+  if(network.name === "zksyncMainnet") {
+    const classicFactory = "0xf2DAd89f2788a8CD54625C60b55cD3d2D0ACa7Cb"; // cherryswap factory
+    const stableFactory = "0x5b9f21d407F35b10CbfDDca17D5D84b129356ea3"; // cherryswap factory
+    const vault = "0x621425a1Ef6abE91058E9712575dcc4258F8d091"; // cherryswap factory
+    const SyncSwapper = await deploy("SyncSwapper", {
+      from: deployer,
+      args: [classicFactory, stableFactory, vault],
+      log: true,
+    });
+  }
 };
 export default func;
 func.tags = ["Swapper"];
