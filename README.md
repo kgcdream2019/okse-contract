@@ -397,3 +397,12 @@ Daily limits
             cash    SatinTwapPriceFeed   0x80487b4f8f70e793A81a42367c225ee0B94315DF     0x82858f8636f73A1A59834cC7B1E34fe29c7911Ef
             okse    SatinTwapPriceFeed   0xFf1674D39dEf5d3840f4021FAD2c5D4F20520557     0x749CDb68898F687fafd6f4A1e78Bddc0499591c9
       - PolygonSwapper    0xD8F876DCB1FeCb1419d1CCEF0C6D8f0582bA3539 => 0x6Fd5D79e7eC1879Ae0917E99fB10461f7dF6De48
+    - zksync
+      - price feed
+            weth    SyncSwapPriceFeed
+            0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91  0xfC1916B0a2980350F6d40fB54d0B5189B49F84F4
+
+            okse    set const price
+            0x8483bf6d5E45e467f2979c5d51B76100AAB60294  0.03084
+            usdc    set const price
+            0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4  1.0

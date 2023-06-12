@@ -25,6 +25,9 @@ async function main() {
     else if (network.name === "optimism") {
         contractAddress = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7";
     }
+    else if (network.name === "zksyncMainnet") {
+        contractAddress = "0x3727d9097aC27F57d81124c8290e63843CBb8c96";
+    }
     const multiSigContract = await ethers.getContractAt("OkseCardPriceOracle", contractAddress);
     let asset;
     let priceFeed;
@@ -182,6 +185,13 @@ async function main() {
         priceFeed = "0x82858f8636f73A1A59834cC7B1E34fe29c7911Ef";
         asset = OKSE
         priceFeed = "0x749CDb68898F687fafd6f4A1e78Bddc0499591c9";
+    }
+    else if (network.name === "zksyncMainnet") {
+        chainId = 324;
+        const weth = "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91"; // weth
+        asset = weth
+        priceFeed = "0xfC1916B0a2980350F6d40fB54d0B5189B49F84F4";
+
     }
     let signData = getSignData("setPriceFeed", 57, ["address", "address"], [asset, priceFeed])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);

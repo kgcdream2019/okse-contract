@@ -25,6 +25,9 @@ async function main() {
     else if (network.name === "optimism") {
         contractAddress = "0xcbeDEe9C29E92d61adD691dE46bc6d4F4Bb070A7";
     }
+    else if (network.name === "zksyncMainnet") {
+        contractAddress = "0x3727d9097aC27F57d81124c8290e63843CBb8c96";
+    }
     const multiSigContract = await ethers.getContractAt("OkseCardPriceOracle", contractAddress);
     let asset;
     let price;
@@ -69,7 +72,14 @@ async function main() {
         asset = "0x259479fBeb1CDe194afA297f36f4216e9C87728c"; // OKSE
         price = "10000000"; // 0.1$
     }
-    let signData = getSignData("setDirectPrice", 10, ["address", "uint256"], [asset, price])
+    else if(network.name === "zksyncMainnet"){
+        chainId = 324;
+        asset = "0x8483bf6d5E45e467f2979c5d51B76100AAB60294"; // OKSE
+        price = "3084000"; // 0.03084$
+        asset = "0x3355df6D4c9C3035724Fd0e3914dE96A5a83aaf4"; // USDC
+        price = "100000000"; // 1$
+    }
+    let signData = getSignData("setDirectPrice", 11, ["address", "uint256"], [asset, price])
     let { v, r, s, keys } = await getSignKeys(process.env.SECOND_OWNER, contractAddress, chainId, signData);
     console.log(signData, keys);
     const tx = await multiSigContract.setDirectPrice(signData, keys);
